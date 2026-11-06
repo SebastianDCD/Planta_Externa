@@ -1,0 +1,2641 @@
+{
+  "system": "Planta Externa",
+  "project": "UACH",
+  "source_file": "Plantilla metrajes(1).xlsx",
+  "phases_included": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "records": [
+    {
+      "phase": 1,
+      "nap": 1,
+      "source_sheet": "1N01 - 1N02",
+      "drop": 20,
+      "splitter": 1,
+      "total_poles": 1,
+      "strapped_poles": 0,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 20,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 0,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 0,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 0,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 1,
+      "nap": 2,
+      "source_sheet": "1N01 - 1N02",
+      "drop": 550,
+      "splitter": 1,
+      "total_poles": 16,
+      "strapped_poles": 0,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 550,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 0,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 0,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 32,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 20,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 1,
+      "nap": 3,
+      "source_sheet": "1N01 - 1N02",
+      "drop": 210,
+      "splitter": 1,
+      "total_poles": 6,
+      "strapped_poles": 4,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 210,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 6,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 8,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 12,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 70,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 1,
+      "nap": 4,
+      "source_sheet": "1N01 - 1N02",
+      "drop": 260,
+      "splitter": 1,
+      "total_poles": 11,
+      "strapped_poles": 7,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 260,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 10.5,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 14,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 22,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 50,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 1,
+      "nap": 5,
+      "source_sheet": "1N01 - 1N02",
+      "drop": 600,
+      "splitter": 1,
+      "total_poles": 15,
+      "strapped_poles": 9,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 600,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 13.5,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 18,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 30,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 30,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 1,
+      "nap": 6,
+      "source_sheet": "1N01 - 1N02",
+      "drop": 600,
+      "splitter": 1,
+      "total_poles": 14,
+      "strapped_poles": 9,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 600,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 13.5,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 18,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 28,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 70,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 1,
+      "nap": 7,
+      "source_sheet": "1N01 - 1N02",
+      "drop": 140,
+      "splitter": 1,
+      "total_poles": 5,
+      "strapped_poles": 0,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 140,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 0,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 0,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 10,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 50,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 1,
+      "nap": 8,
+      "source_sheet": "1N01 - 1N02",
+      "drop": 300,
+      "splitter": 1,
+      "total_poles": 8,
+      "strapped_poles": 7,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 300,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 10.5,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 14,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 16,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 50,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 2,
+      "nap": 1,
+      "source_sheet": "1N02 - 1N02",
+      "drop": 550,
+      "splitter": 1,
+      "total_poles": 12,
+      "strapped_poles": 0,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 550,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 0,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 0,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 24,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 70,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 2,
+      "nap": 2,
+      "source_sheet": "1N02 - 1N02",
+      "drop": 300,
+      "splitter": 1,
+      "total_poles": 7,
+      "strapped_poles": 0,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 300,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 0,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 0,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 14,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 50,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 2,
+      "nap": 3,
+      "source_sheet": "1N02 - 1N02",
+      "drop": 340,
+      "splitter": 1,
+      "total_poles": 8,
+      "strapped_poles": 3,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 340,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 4.5,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 6,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 16,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 50,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 2,
+      "nap": 4,
+      "source_sheet": "1N02 - 1N02",
+      "drop": 250,
+      "splitter": 1,
+      "total_poles": 8,
+      "strapped_poles": 6,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 250,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 9,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 12,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 16,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 50,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 2,
+      "nap": 5,
+      "source_sheet": "1N02 - 1N02",
+      "drop": 320,
+      "splitter": 1,
+      "total_poles": 11,
+      "strapped_poles": 5,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 320,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 7.5,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 10,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 22,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 50,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 2,
+      "nap": 6,
+      "source_sheet": "1N02 - 1N02",
+      "drop": 420,
+      "splitter": 1,
+      "total_poles": 12,
+      "strapped_poles": 9,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 420,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 13.5,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 18,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 24,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 70,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 2,
+      "nap": 7,
+      "source_sheet": "1N02 - 1N02",
+      "drop": 500,
+      "splitter": 1,
+      "total_poles": 15,
+      "strapped_poles": 9,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 500,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 13.5,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 18,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 30,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 60,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 2,
+      "nap": 8,
+      "source_sheet": "1N02 - 1N02",
+      "drop": 50,
+      "splitter": 1,
+      "total_poles": 2,
+      "strapped_poles": 0,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 50,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 0,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 0,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 2,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 0,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 3,
+      "nap": 1,
+      "source_sheet": "1N03 - 1N03",
+      "drop": 240,
+      "splitter": 1,
+      "total_poles": 8,
+      "strapped_poles": 7,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 240,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 10.5,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 14,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 16,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 70,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 3,
+      "nap": 2,
+      "source_sheet": "1N03 - 1N03",
+      "drop": 20,
+      "splitter": 1,
+      "total_poles": 2,
+      "strapped_poles": 0,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 20,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 0,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 0,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 2,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 30,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 3,
+      "nap": 3,
+      "source_sheet": "1N03 - 1N03",
+      "drop": 200,
+      "splitter": 1,
+      "total_poles": 6,
+      "strapped_poles": 4,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 200,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 6,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 8,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 12,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 70,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 3,
+      "nap": 4,
+      "source_sheet": "1N03 - 1N03",
+      "drop": 300,
+      "splitter": 1,
+      "total_poles": 7,
+      "strapped_poles": 0,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 300,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 0,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 0,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 14,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 80,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 3,
+      "nap": 5,
+      "source_sheet": "1N03 - 1N03",
+      "drop": 400,
+      "splitter": 1,
+      "total_poles": 10,
+      "strapped_poles": 1,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 400,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 1.5,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 2,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 20,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": null,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 3,
+      "nap": 6,
+      "source_sheet": "1N03 - 1N03",
+      "drop": 700,
+      "splitter": 1,
+      "total_poles": null,
+      "strapped_poles": null,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 700,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": null,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": null,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": null,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": null,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 3,
+      "nap": 7,
+      "source_sheet": "1N03 - 1N03",
+      "drop": 700,
+      "splitter": 1,
+      "total_poles": null,
+      "strapped_poles": null,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 700,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": null,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": null,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": null,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": null,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 3,
+      "nap": 8,
+      "source_sheet": "1N03 - 1N03",
+      "drop": 600,
+      "splitter": 1,
+      "total_poles": 12,
+      "strapped_poles": 4,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 600,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 6,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 8,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 24,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 70,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 4,
+      "nap": 1,
+      "source_sheet": "1N04 - 1N04",
+      "drop": 390,
+      "splitter": 1,
+      "total_poles": 11,
+      "strapped_poles": 10,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 390,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 15,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 20,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 22,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 50,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 4,
+      "nap": 2,
+      "source_sheet": "1N04 - 1N04",
+      "drop": 330,
+      "splitter": 1,
+      "total_poles": 9,
+      "strapped_poles": 1,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 330,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 1.5,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 2,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 2,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 50,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 4,
+      "nap": 3,
+      "source_sheet": "1N04 - 1N04",
+      "drop": 100,
+      "splitter": 1,
+      "total_poles": 2,
+      "strapped_poles": 3,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 100,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 4.5,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 6,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 4,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": null,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 4,
+      "nap": 4,
+      "source_sheet": "1N04 - 1N04",
+      "drop": 100,
+      "splitter": 1,
+      "total_poles": 3,
+      "strapped_poles": 0,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 100,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 0,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 0,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 6,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 30,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 4,
+      "nap": 5,
+      "source_sheet": "1N04 - 1N04",
+      "drop": 290,
+      "splitter": 1,
+      "total_poles": 6,
+      "strapped_poles": 5,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 290,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 7.5,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 10,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 12,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 80,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 4,
+      "nap": 6,
+      "source_sheet": "1N04 - 1N04",
+      "drop": null,
+      "splitter": 1,
+      "total_poles": null,
+      "strapped_poles": null,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": null,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": null,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": null,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": null,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": null,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 4,
+      "nap": 7,
+      "source_sheet": "1N04 - 1N04",
+      "drop": null,
+      "splitter": 1,
+      "total_poles": null,
+      "strapped_poles": null,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": null,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": null,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": null,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": null,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": null,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 4,
+      "nap": 8,
+      "source_sheet": "1N04 - 1N04",
+      "drop": null,
+      "splitter": 1,
+      "total_poles": null,
+      "strapped_poles": null,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": null,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": null,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": null,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 0,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": null,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 5,
+      "nap": 1,
+      "source_sheet": "1N05 - 1N05",
+      "drop": 100,
+      "splitter": 1,
+      "total_poles": 3,
+      "strapped_poles": 0,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 100,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 0,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 0,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 6,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 50,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 5,
+      "nap": 2,
+      "source_sheet": "1N05 - 1N05",
+      "drop": 100,
+      "splitter": 1,
+      "total_poles": 5,
+      "strapped_poles": 3,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 100,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 4.5,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 6,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 2,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 50,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 5,
+      "nap": 3,
+      "source_sheet": "1N05 - 1N05",
+      "drop": 400,
+      "splitter": 1,
+      "total_poles": 11,
+      "strapped_poles": 2,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 400,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 3,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 4,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 22,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 50,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 5,
+      "nap": 4,
+      "source_sheet": "1N05 - 1N05",
+      "drop": 310,
+      "splitter": 1,
+      "total_poles": 6,
+      "strapped_poles": 5,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 310,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 7.5,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 10,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 12,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 70,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 5,
+      "nap": 5,
+      "source_sheet": "1N05 - 1N05",
+      "drop": 550,
+      "splitter": 1,
+      "total_poles": 8,
+      "strapped_poles": 4,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 550,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 6,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 8,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 16,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 50,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 5,
+      "nap": 6,
+      "source_sheet": "1N05 - 1N05",
+      "drop": 100,
+      "splitter": 1,
+      "total_poles": 2,
+      "strapped_poles": 0,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 100,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 0,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 0,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 4,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 50,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 5,
+      "nap": 7,
+      "source_sheet": "1N05 - 1N05",
+      "drop": 210,
+      "splitter": 1,
+      "total_poles": 5,
+      "strapped_poles": 2,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 210,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 3,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 4,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 10,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 30,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 5,
+      "nap": 8,
+      "source_sheet": "1N05 - 1N05",
+      "drop": 450,
+      "splitter": 1,
+      "total_poles": 9,
+      "strapped_poles": 4,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 450,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 6,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 8,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 18,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 50,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 6,
+      "nap": 1,
+      "source_sheet": "1N06 - 1N06",
+      "drop": 0,
+      "splitter": 1,
+      "total_poles": 0,
+      "strapped_poles": 0,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 0,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 0,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 0,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 0,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 0,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 6,
+      "nap": 2,
+      "source_sheet": "1N06 - 1N06",
+      "drop": 15,
+      "splitter": 1,
+      "total_poles": 2,
+      "strapped_poles": 0,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 15,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 0,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 0,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 2,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 50,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 6,
+      "nap": 3,
+      "source_sheet": "1N06 - 1N06",
+      "drop": 170,
+      "splitter": 1,
+      "total_poles": 5,
+      "strapped_poles": 2,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 170,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 3,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 4,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 10,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 50,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 6,
+      "nap": 4,
+      "source_sheet": "1N06 - 1N06",
+      "drop": 330,
+      "splitter": 1,
+      "total_poles": 8,
+      "strapped_poles": 6,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 330,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 9,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 12,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 16,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 100,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 6,
+      "nap": 5,
+      "source_sheet": "1N06 - 1N06",
+      "drop": 500,
+      "splitter": 1,
+      "total_poles": 9,
+      "strapped_poles": 8,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 500,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 12,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 16,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 18,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 50,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 6,
+      "nap": 6,
+      "source_sheet": "1N06 - 1N06",
+      "drop": 500,
+      "splitter": 1,
+      "total_poles": 11,
+      "strapped_poles": 2,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 500,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 3,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 4,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 22,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 50,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 6,
+      "nap": 7,
+      "source_sheet": "1N06 - 1N06",
+      "drop": 300,
+      "splitter": 1,
+      "total_poles": 7,
+      "strapped_poles": 5,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 300,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 7.5,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 10,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 14,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 30,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 6,
+      "nap": 8,
+      "source_sheet": "1N06 - 1N06",
+      "drop": null,
+      "splitter": 1,
+      "total_poles": 0,
+      "strapped_poles": 0,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": null,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 0,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 0,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 0,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 0,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 7,
+      "nap": 1,
+      "source_sheet": "1N07 - 1N07",
+      "drop": 430,
+      "splitter": 1,
+      "total_poles": 12,
+      "strapped_poles": 12,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 430,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 18,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 24,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 24,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 50,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 7,
+      "nap": 2,
+      "source_sheet": "1N07 - 1N07",
+      "drop": 500,
+      "splitter": 1,
+      "total_poles": 2,
+      "strapped_poles": 0,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 500,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 0,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 0,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 2,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 0,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 7,
+      "nap": 3,
+      "source_sheet": "1N07 - 1N07",
+      "drop": 100,
+      "splitter": 1,
+      "total_poles": 8,
+      "strapped_poles": 1,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 100,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 1.5,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 2,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 16,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 50,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 7,
+      "nap": 4,
+      "source_sheet": "1N07 - 1N07",
+      "drop": 400,
+      "splitter": 1,
+      "total_poles": 11,
+      "strapped_poles": 6,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 400,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 9,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 12,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 22,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 50,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 7,
+      "nap": 5,
+      "source_sheet": "1N07 - 1N07",
+      "drop": 260,
+      "splitter": 1,
+      "total_poles": 10,
+      "strapped_poles": 4,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 260,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 6,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 8,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 20,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 50,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 7,
+      "nap": 6,
+      "source_sheet": "1N07 - 1N07",
+      "drop": 340,
+      "splitter": 1,
+      "total_poles": 5,
+      "strapped_poles": 0,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 340,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 0,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 0,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 10,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 50,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 7,
+      "nap": 7,
+      "source_sheet": "1N07 - 1N07",
+      "drop": 270,
+      "splitter": 1,
+      "total_poles": 14,
+      "strapped_poles": 3,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 270,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 4.5,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 6,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 28,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 80,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 7,
+      "nap": 8,
+      "source_sheet": "1N07 - 1N07",
+      "drop": 360,
+      "splitter": 1,
+      "total_poles": 4,
+      "strapped_poles": 3,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 360,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 4.5,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 6,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 8,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 50,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 8,
+      "nap": 1,
+      "source_sheet": "1N08 - 1N08",
+      "drop": 430,
+      "splitter": 1,
+      "total_poles": 10,
+      "strapped_poles": 0,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 430,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 0,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 0,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 20,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 0,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 8,
+      "nap": 2,
+      "source_sheet": "1N08 - 1N08",
+      "drop": 500,
+      "splitter": 1,
+      "total_poles": 11,
+      "strapped_poles": 0,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 500,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 0,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 0,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 2,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 50,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 8,
+      "nap": 3,
+      "source_sheet": "1N08 - 1N08",
+      "drop": 100,
+      "splitter": 1,
+      "total_poles": 3,
+      "strapped_poles": 0,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 100,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 0,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 0,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 6,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 50,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 8,
+      "nap": 4,
+      "source_sheet": "1N08 - 1N08",
+      "drop": 400,
+      "splitter": 1,
+      "total_poles": 10,
+      "strapped_poles": 6,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 400,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 9,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 12,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 20,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 30,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 8,
+      "nap": 5,
+      "source_sheet": "1N08 - 1N08",
+      "drop": 260,
+      "splitter": 1,
+      "total_poles": 6,
+      "strapped_poles": 5,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 260,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 7.5,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 10,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 12,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 40,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 8,
+      "nap": 6,
+      "source_sheet": "1N08 - 1N08",
+      "drop": 340,
+      "splitter": 1,
+      "total_poles": 9,
+      "strapped_poles": 1,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 340,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 1.5,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 2,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 18,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 50,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 8,
+      "nap": 7,
+      "source_sheet": "1N08 - 1N08",
+      "drop": 270,
+      "splitter": 1,
+      "total_poles": 9,
+      "strapped_poles": 5,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 270,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 7.5,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 10,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 18,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 50,
+          "unit": "m"
+        }
+      ]
+    },
+    {
+      "phase": 8,
+      "nap": 8,
+      "source_sheet": "1N08 - 1N08",
+      "drop": 360,
+      "splitter": 1,
+      "total_poles": 10,
+      "strapped_poles": 5,
+      "materials": [
+        {
+          "name": "Drop",
+          "quantity": 360,
+          "unit": "m"
+        },
+        {
+          "name": "Splitter",
+          "quantity": 1,
+          "unit": "pza"
+        },
+        {
+          "name": "Fleje",
+          "quantity": 7.5,
+          "unit": "m"
+        },
+        {
+          "name": "Herrajes tipo D",
+          "quantity": 10,
+          "unit": "pza"
+        },
+        {
+          "name": "Tensores",
+          "quantity": 20,
+          "unit": "pza"
+        },
+        {
+          "name": "Acero",
+          "quantity": 50,
+          "unit": "m"
+        }
+      ]
+    }
+  ]
+}

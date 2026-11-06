@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Control de Planta Externa</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+
+  <body>
+    <div class="app-container">
+      <aside class="sidebar">
+        <h2>CONTROL EXTERNA</h2>
+
+        <nav>
+          <a href="#" class="nav-link active" data-section="dashboard">
+            Panel principal
+          </a>
+
+          <a href="#" class="nav-link" data-section="phases"> Fases </a>
+
+          <a href="#" class="nav-link" data-section="deliveries"> Entregas </a>
+
+          <a href="#" class="nav-link" data-section="progress"> Avances </a>
+
+          <a href="#" class="nav-link" data-section="materials"> Materiales </a>
+
+          <a href="#" class="nav-link" data-section="history"> Historial </a>
+        </nav>
+      </aside>
+
+      <main class="main-content">
+        <header class="topbar">
+          <h1>Panel principal</h1>
+          <span>MONITOREO PLANTA EXTERNA</span>
+        </header>
+
+
+<section id="dashboard-section" class="dashboard-cards">
+
+  <article class="card project-card">
+    <span>PROYECTO ACTIVO</span>
+    <h2>UACH</h2>
+    <p>Control de construcción de planta externa</p>
+  </article>
+
+  <article class="card">
+    <h3>Fases del proyecto</h3>
+    <p>09</p>
+  </article>
+
+  <article class="card">
+    <h3>Metraje planeado</h3>
+    <p id="total-meters">0 m</p>
+  </article>
+
+  <article class="card">
+    <h3>Metros construidos</h3>
+    <p id="completed-meters">0 m</p>
+  </article>
+
+  <article class="card">
+    <h3>NAP terminadas</h3>
+    <p id="completed-naps">0 / 72</p>
+  </article>
+
+  <article class="card">
+    <h3>Fases con avance</h3>
+    <p id="completed-phases">0 / 9</p>
+  </article>
+
+  <article class="card">
+    <h3>NAP planeadas</h3>
+    <p>72</p>
+  </article>
+
+</section>
+        <section id="progress-section" hidden>
+          <h2>Avance general del proyecto</h2>
+
+          <div class="progress-summary">
+            <article class="card">
+              <h3>Avance global</h3>
+              <p id="global-percentage">0%</p>
+            </article>
+
+            <article class="card">
+              <h3>NAP concluidas</h3>
+              <p id="global-naps">0 / 0</p>
+            </article>
+
+            <article class="card">
+              <h3>Metros ejecutados</h3>
+              <p id="global-meters">0 / 0 m</p>
+            </article>
+          </div>
+
+          <h2>Avance por fase</h2>
+
+          <div id="progress-container"></div>
+        </section>
+
+        <section id="phases-section" class="phases-section" hidden>
+          <h2>Fases del proyecto</h2>
+          <div id="phases-container"></div>
+        </section>
+
+        <section id="phase-detail" hidden>
+          <button id="back-button">← Volver a las fases</button>
+
+          <header class="phase-detail-header">
+            <h2 id="detail-title">Fase 01</h2>
+            <p id="detail-status"></p>
+          </header>
+
+          <div class="card">
+            <h3>Metraje planeado</h3>
+            <p id="detail-meters">0 m</p>
+          </div>
+
+          <div class="card progress-card">
+  <h3>Avance de construcción de la fase</h3>
+
+  <div class="progress-info">
+    <span id="completed-count">0 de 8 NAP terminadas</span>
+    <strong id="progress-percentage">0%</strong>
+  </div>
+
+  <div class="progress-bar">
+    <div id="progress-fill"></div>
+  </div>
+</div>
+
+          <h3>NAP de la fase</h3>
+
+          <div id="naps-container"></div>
+        </section>
+      </main>
+    </div>
+
+    <div id="completion-modal" class="modal" hidden>
+      <div class="modal-content">
+        <h2>¡NAP terminada!</h2>
+
+        <div id="completion-details"></div>
+
+        <button id="close-modal">Cerrar</button>
+      </div>
+    </div>
+
+    <script src="/js/app.js"></script>
+  </body>
+</html>
