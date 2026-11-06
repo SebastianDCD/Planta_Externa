@@ -130,8 +130,8 @@ async function loadPhases() {
 
     document.getElementById("completed-phases").textContent =
       `${completedPhases} / ${phases.length}`;
-    
-      return phases;
+
+    return phases;
   } catch (error) {
     console.error("Error cargando fases:", error);
     console.error("Detalle del error:", error.message);
@@ -356,64 +356,122 @@ function showPhase(phase) {
       ? "Instalación completada"
       : "Instalación pendiente";
 
+    const today = new Date();
+
+    const todayLocal = [
+      today.getFullYear(),
+      String(today.getMonth() + 1).padStart(2, "0"),
+      String(today.getDate()).padStart(2, "0"),
+    ].join("-");
+
     nap.innerHTML = `
   <strong>NAP ${String(napData.number).padStart(2, "0")}</strong>
 
   <span>${meterText}</span>
 
   <div class="nap-status-info">
-    <span class="construction-status">Construcción: ${constructionText}</span>
+    <span class="construction-status">
+      Construcción: ${constructionText}
+    </span>
     <span>${installationText}</span>
   </div>
 
-  <button class="complete-button ${isConstructionCompleted ? "completed" : ""}"
-    ${isConstructionCompleted ? "disabled" : ""}>
-    ${isConstructionCompleted ? "Terminada" : "Terminar construcción"}
-  </button>
+  <div class="opening-info">
+    ${
+      napData.opening_date
+        ? `
+          <p>Fecha de apertura: ${napData.opening_date}</p>
+          <p>Potencia inicial: ${napData.opening_power} dBm</p>
+        `
+        : `
+          <form class="opening-form">
+            <strong>Registrar apertura</strong>
+
+            <label>Fecha de apertura</label>
+            <input
+              type="date"
+              name="opening_date"
+              required
+              max="${todayLocal}"
+              value="${todayLocal}"
+            >
+
+            <label>Potencia óptica (dBm)</label>
+            <input
+              type="number"
+              name="opening_power"
+              step="0.01"
+              min="-100"
+              max="10"
+              placeholder="-23.45"
+              required
+            >
+
+            <button class="opening-button">
+              Registrar apertura y terminar construcción
+            </button>
+          </form>
+        `
+    }
+  </div>
 `;
 
     const constructionStatus = nap.querySelector(".construction-status");
-    const completeButton = nap.querySelector(".complete-button");
 
-    completeButton.addEventListener("click", async () => {
-      completeButton.disabled = true;
-      completeButton.textContent = "Guardando...";
+    const openingForm = nap.querySelector(".opening-form");
 
-      try {
-        const response = await fetch(
-          `/api/phases/${phase.id}/naps/${napData.number}/construction`,
-          {
-            method: "PATCH",
-          },
-        );
+    if (openingForm) {
+      openingForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
 
-        const result = await response.json();
+        const openingButton = openingForm.querySelector(".opening-button");
 
-        if (!response.ok) {
-          throw new Error(result.message);
+        const openingDate = openingForm.elements.opening_date.value;
+        const openingPower = Number(openingForm.elements.opening_power.value);
+
+        openingButton.disabled = true;
+        openingButton.textContent = "Guardando...";
+
+        try {
+          const response = await fetch(
+            `/api/phases/${phase.id}/naps/${napData.number}/opening`,
+            {
+              method: "PATCH",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                opening_date: openingDate,
+                opening_power: openingPower,
+              }),
+            },
+          );
+
+          const result = await response.json();
+
+          if (!response.ok) {
+            throw new Error(result.message);
+          }
+
+          const updatedPhases = await loadPhases();
+
+          const updatedPhase = updatedPhases.find(
+            (item) => item.id === phase.id,
+          );
+
+          if (updatedPhase) {
+            showPhase(updatedPhase);
+          }
+        } catch (error) {
+          console.error("Error al registrar apertura:", error);
+
+          openingButton.disabled = false;
+          openingButton.textContent = "Reintentar";
+
+          alert(`Error al registrar apertura: ${error.message}`);
         }
-
-napData.construction_status = "TERMINADA";
-
-const updatedPhases = await loadPhases();
-
-const updatedPhase = updatedPhases.find(
-  (item) => item.id === phase.id,
-);
-
-if (updatedPhase) {
-  showPhase(updatedPhase);
-}
-      } catch (error) {
-        console.error("Error al terminar construcción:", error);
-
-        completeButton.textContent = "Reintentar";
-        completeButton.disabled = false;
-
-        alert(`Error al guardar: ${error.message}`);
-      }
-    });
-
+      });
+    }
     napsContainer.appendChild(nap);
   }
 
@@ -422,9 +480,9 @@ if (updatedPhase) {
 
 // Calcular el avance
 function updateProgress(phase) {
-  const completed = napsContainer.querySelectorAll(
-    ".complete-button.completed",
-  ).length;
+const completed = phase.naps.filter(
+  (nap) => nap.construction_status === "TERMINADA",
+).length;
 
   const total = phase.naps.filter(
     (nap) => nap.meters !== null && nap.meters > 0,
