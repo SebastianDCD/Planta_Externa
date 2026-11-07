@@ -100,6 +100,40 @@
           <div id="progress-container"></div>
         </section>
 
+        <section id="materials-section" hidden>
+  <h2>Inventario de materiales</h2>
+
+<div class="card">
+  <label for="materials-phase-select">Consultar materiales por fase</label>
+
+  <select id="materials-phase-select">
+    <option value="">Selecciona una fase</option>
+  </select>
+</div>
+
+<div id="phase-materials-container"></div>
+
+  <div class="progress-summary">
+    <article class="card">
+      <h3>Materiales registrados</h3>
+      <p id="materials-count">0</p>
+    </article>
+
+    <article class="card">
+      <h3>NAP contempladas</h3>
+      <p id="materials-naps">0</p>
+    </article>
+  </div>
+
+  <div class="card">
+    <h3>Concentrado de materiales</h3>
+
+    <div id="materials-container">
+      <p>Cargando materiales...</p>
+    </div>
+  </div>
+</section>
+
         <section id="phases-section" class="phases-section" hidden>
           <h2>Fases del proyecto</h2>
           <div id="phases-container"></div>

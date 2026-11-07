@@ -720,3 +720,47 @@ body {
         grid-template-columns: 1fr;
     }
 }
+
+/* Desglose de materiales por NAP */
+
+#phase-materials-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+#phase-materials-container .card {
+  padding: 20px;
+  min-width: 0;
+}
+
+#phase-materials-container table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+}
+
+#phase-materials-container th,
+#phase-materials-container td {
+  padding: 10px 12px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+#phase-materials-container th {
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+#phase-materials-container td {
+  font-size: 14px;
+}
+
+#phase-materials-container tr:last-child td {
+  border-bottom: none;
+}
+
+#phase-materials-container h3 {
+  margin-bottom: 12px;
+}

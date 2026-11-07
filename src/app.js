@@ -27,6 +27,36 @@ app.get("/api/projects", (req, res) => {
   });
 });
 
+// Consultar materiales de un proyecto
+app.get("/api/materials", (req, res) => {
+  const projectId = Number(req.query.project_id);
+
+  if (!Number.isInteger(projectId) || projectId <= 0) {
+    return res.status(400).json({
+      success: false,
+      message: "Debes proporcionar un ID de proyecto válido.",
+    });
+  }
+
+  const materials = db.prepare(`
+    SELECT
+      nap_materials.name,
+      nap_materials.unit,
+      COUNT(*) AS nap_count,
+      SUM(nap_materials.quantity) AS total_quantity
+    FROM nap_materials
+    JOIN naps ON naps.id = nap_materials.nap_id
+    JOIN phases ON phases.id = naps.phase_id
+    WHERE phases.project_id = ?
+    GROUP BY nap_materials.name, nap_materials.unit
+    ORDER BY nap_materials.name
+  `).all(projectId);
+
+  res.json({
+    success: true,
+    data: materials,
+  });
+});
 
 // Consultar fases de un proyecto
 app.get("/api/phases", (req, res) => {
@@ -86,6 +116,35 @@ app.get("/api/phases", (req, res) => {
     success: true,
     project,
     data: result,
+  });
+});
+
+// Consultar materiales de una fase
+app.get("/api/phases/:phaseId/materials", (req, res) => {
+  const phaseId = Number(req.params.phaseId);
+
+  if (!Number.isInteger(phaseId) || phaseId <= 0) {
+    return res.status(400).json({
+      success: false,
+      message: "El ID de fase no es válido."
+    });
+  }
+
+  const materials = db.prepare(`
+    SELECT
+      naps.number AS nap,
+      nap_materials.name AS material,
+      nap_materials.quantity,
+      nap_materials.unit
+    FROM naps
+    JOIN nap_materials ON nap_materials.nap_id = naps.id
+    WHERE naps.phase_id = ?
+    ORDER BY naps.number, nap_materials.name
+  `).all(phaseId);
+
+  res.json({
+    success: true,
+    data: materials
   });
 });
 

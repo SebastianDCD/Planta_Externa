@@ -2,6 +2,9 @@ const phasesContainer = document.getElementById("phases-container");
 const phaseDetail = document.getElementById("phase-detail");
 const napsContainer = document.getElementById("naps-container");
 
+const materialsSection = document.getElementById("materials-section");
+const materialsContainer = document.getElementById("materials-container");
+
 const phasesSection = document.querySelector(".phases-section");
 const dashboardCards = document.querySelector(".dashboard-cards");
 
@@ -20,6 +23,7 @@ function navigateTo(section) {
   // Mostrar u ocultar las secciones principales
   dashboardCards.hidden = section !== "dashboard";
   phasesSection.hidden = section !== "phases";
+  materialsSection.hidden = section !== "materials";
   document.getElementById("progress-section").hidden = true;
   if (section === "progress") {
     document.getElementById("progress-section").hidden = false;
@@ -30,6 +34,7 @@ function navigateTo(section) {
     dashboard: "Panel principal",
     phases: "Fases del proyecto",
     progress: "Avance general del proyecto",
+    materials: "Inventario de materiales",
   };
 
   pageTitle.textContent = titles[section];
@@ -46,13 +51,18 @@ navLinks.forEach((link) => {
 
     const section = link.dataset.section;
 
-    if (
-      section === "dashboard" ||
-      section === "phases" ||
-      section === "progress"
-    ) {
-      navigateTo(section);
-    }
+if (
+  section === "dashboard" ||
+  section === "phases" ||
+  section === "progress" ||
+  section === "materials"
+) {
+  navigateTo(section);
+
+  if (section === "materials") {
+    loadMaterials();
+  }
+}
   });
 });
 
@@ -77,6 +87,157 @@ function showCompletionModal(data, reminder) {
 
   completionModal.hidden = false;
 }
+
+async function loadMaterials() {
+  try {
+    materialsContainer.innerHTML = "<p>Cargando materiales...</p>";
+
+    const response = await fetch("/api/materials?project_id=1");
+    const result = await response.json();
+
+    if (!result.success) {
+      throw new Error("No se pudieron cargar los materiales.");
+    }
+
+    const materials = result.data;
+
+    const phaseSelect = document.getElementById("materials-phase-select");
+
+const phasesResponse = await fetch("/api/phases?project_id=1");
+const phasesResult = await phasesResponse.json();
+
+if (!phasesResult.success) {
+  throw new Error("No se pudieron cargar las fases.");
+}
+
+phaseSelect.innerHTML = `
+  <option value="">Selecciona una fase</option>
+  ${phasesResult.data.map(phase => `
+    <option value="${phase.id}">${phase.name}</option>
+  `).join("")}
+`;
+
+    document.getElementById("materials-count").textContent =
+      materials.length;
+
+    document.getElementById("materials-naps").textContent =
+      materials.length > 0 ? materials[0].nap_count : 0;
+
+    materialsContainer.innerHTML = `
+      <table>
+        <thead>
+          <tr>
+            <th>Material</th>
+            <th>Cantidad total</th>
+            <th>Unidad</th>
+            <th>NAP</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${materials.map(material => `
+            <tr>
+              <td>${material.name}</td>
+              <td>${Number(material.total_quantity).toLocaleString("es-MX")}</td>
+              <td>${material.unit}</td>
+              <td>${material.nap_count}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    `;
+
+  } catch (error) {
+    console.error("Error al cargar materiales:", error);
+
+    materialsContainer.innerHTML = `
+      <p>No fue posible cargar los materiales.</p>
+    `;
+  }
+}
+
+async function loadPhaseMaterials(phaseId) {
+  const container = document.getElementById("phase-materials-container");
+
+  container.innerHTML = "<p>Cargando materiales de la fase...</p>";
+
+  try {
+    const response = await fetch(`/api/phases/${phaseId}/materials`);
+    const result = await response.json();
+
+    if (!result.success) {
+      throw new Error("No se pudieron consultar los materiales.");
+    }
+
+    if (result.data.length === 0) {
+      container.innerHTML = `
+        <div class="card">
+          <p>Esta fase aún no tiene materiales registrados.</p>
+        </div>
+      `;
+      return;
+    }
+
+    const groupedMaterials = result.data.reduce((groups, item) => {
+      if (!groups[item.nap]) {
+        groups[item.nap] = [];
+      }
+
+      groups[item.nap].push(item);
+      return groups;
+    }, {});
+
+    container.innerHTML = Object.entries(groupedMaterials)
+      .map(([nap, materials]) => `
+        <article class="card">
+          <h3>NAP ${nap}</h3>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Material</th>
+                <th>Cantidad</th>
+                <th>Unidad</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              ${materials.map(material => `
+                <tr>
+                  <td>${material.material}</td>
+                  <td>${material.quantity}</td>
+                  <td>${material.unit}</td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        </article>
+      `)
+      .join("");
+
+  } catch (error) {
+    console.error("Error al cargar materiales por fase:", error);
+    container.innerHTML = `
+      <div class="card">
+        <p>No fue posible cargar los materiales de esta fase.</p>
+      </div>
+    `;
+  }
+}
+
+const materialsPhaseSelect = document.getElementById("materials-phase-select");
+
+materialsPhaseSelect.addEventListener("change", () => {
+  const phaseId = materialsPhaseSelect.value;
+
+  const container = document.getElementById("phase-materials-container");
+
+  if (!phaseId) {
+    container.innerHTML = "<p>Selecciona una fase para consultar el desglose.</p>";
+    return;
+  }
+
+  loadPhaseMaterials(phaseId);
+});
 
 // Consultar fases desde SQLite
 async function loadPhases() {
