@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require("path");
 const db = require("./database");
+const { sendNapToN8n } = require("./services/N8nService");
 
 const app = express();
 
@@ -201,7 +202,7 @@ app.patch("/api/phases/:phaseId/naps/:napNumber/construction", (req, res) => {
 
 
 // Registrar apertura de una NAP
-app.patch("/api/phases/:phaseId/naps/:napNumber/opening", (req, res) => {
+app.patch("/api/phases/:phaseId/naps/:napNumber/opening", async (req, res) => {
   const phaseId = Number(req.params.phaseId);
   const napNumber = Number(req.params.napNumber);
 
@@ -282,6 +283,27 @@ if (opening_date > todayLocal) {
     WHERE id = ?
   `).run(opening_date, opening_power, nap.id);
 
+      let n8nResult = {
+    sent: false,
+    message: "No se pudo enviar el reporte a n8n.",
+  };
+
+  try {
+    const response = await sendNapToN8n(nap.id);
+
+    n8nResult = {
+      sent: true,
+      message: response.message,
+    };
+  } catch (error) {
+    console.error(
+      `Error enviando materiales de la NAP ${napNumber} a n8n:`,
+      error.message
+    );
+
+    n8nResult.message = error.message;
+  }
+
   res.json({
     success: true,
     message: "Apertura registrada correctamente.",
@@ -290,6 +312,7 @@ if (opening_date > todayLocal) {
       nap: napNumber,
       opening_date,
       opening_power,
+      n8n: n8nResult,
     },
   });
 });
