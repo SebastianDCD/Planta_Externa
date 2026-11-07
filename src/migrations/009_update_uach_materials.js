@@ -200,7 +200,7 @@ const migrate = db.transaction(() => {
     // 5. Relacionar los nombres anteriores con los nuevos
   const materialMapping = {
     "Acero": "Acero",
-    "Drop": "Unifibra m",
+    "Drop": "Unifibra mts",
     "Fleje": "Fleje 5/8",
     "Herrajes tipo D": "Herrajes Tipo D",
     "Splitter": "Splitter 1x8",
