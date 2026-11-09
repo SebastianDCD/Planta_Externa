@@ -15,7 +15,21 @@ const completionModal = document.getElementById("completion-modal");
 const completionDetails = document.getElementById("completion-details");
 const closeModalButton = document.getElementById("close-modal");
 
+const tendidosSection = document.getElementById("tendidos-section");
+const constructionPhaseSelect = document.getElementById("construction-phase-select");
+
+constructionPhaseSelect.addEventListener("change", () => {
+  if (constructionPhaseSelect.value) {
+    loadFiberRuns(constructionPhaseSelect.value);
+  } else {
+    fiberRunsContainer.innerHTML = "";
+  }
+});
+
+const fiberRunsContainer = document.getElementById("fiber-runs-container");
+
 function navigateTo(section) {
+  tendidosSection.hidden = section !== "tendidos";
   console.log("Navegando a:", section);
   // Ocultar el detalle de una fase
   phaseDetail.hidden = true;
@@ -24,6 +38,7 @@ function navigateTo(section) {
   dashboardCards.hidden = section !== "dashboard";
   phasesSection.hidden = section !== "phases";
   materialsSection.hidden = section !== "materials";
+  tendidosSection.hidden = section !== "tendidos";
   document.getElementById("progress-section").hidden = true;
   if (section === "progress") {
     document.getElementById("progress-section").hidden = false;
@@ -35,6 +50,7 @@ function navigateTo(section) {
     phases: "Fases del proyecto",
     progress: "Avance general del proyecto",
     materials: "Inventario de materiales",
+    tendidos: "Construcción de tendidos"
   };
 
   pageTitle.textContent = titles[section];
@@ -55,13 +71,17 @@ if (
   section === "dashboard" ||
   section === "phases" ||
   section === "progress" ||
-  section === "materials"
+  section === "materials" ||
+  section === "tendidos"
 ) {
   navigateTo(section);
 
   if (section === "materials") {
     loadMaterials();
   }
+  if (section === "tendidos") {
+  loadConstructionPhases();
+}
 }
   });
 });
@@ -672,3 +692,180 @@ document.getElementById("back-button").addEventListener("click", () => {
 
 // Iniciar aplicación
 loadPhases();
+
+
+async function loadConstructionPhases() {
+  try {
+    const response = await fetch(
+      "/api/construction-phases?project_id=1"
+    );
+    const result = await response.json();
+
+    if (!result.success) {
+      throw new Error("No se pudieron cargar las fases.");
+    }
+
+    constructionPhaseSelect.innerHTML =
+      '<option value="">Selecciona una fase</option>';
+
+    result.data.forEach(phase => {
+      const option = document.createElement("option");
+      option.value = phase.id;
+      option.textContent =
+        `Fase ${phase.number} (${phase.completed_runs}/${phase.total_runs} tendidos)`;
+
+      constructionPhaseSelect.appendChild(option);
+    });
+
+  } catch (error) {
+    console.error(error);
+    alert(error.message);
+  }
+}
+
+async function loadFiberRuns(phaseId) {
+  try {
+    const response = await fetch(
+      `/api/construction-phases/${phaseId}/runs`
+    );
+
+    const result = await response.json();
+
+    if (!result.success) {
+      throw new Error("No se pudieron cargar los tendidos.");
+    }
+
+    fiberRunsContainer.innerHTML = "";
+
+[...result.data]
+  .sort((a, b) => a.name.localeCompare(b.name, "es", { numeric: true }))
+  .forEach(run => {
+      const card = document.createElement("article");
+      card.className = "card";
+
+      card.innerHTML = `
+        <h3>${run.name}</h3>
+        <p>Hilos: ${run.strand_count}</p>
+        <p>Estado: ${run.status}</p>
+        <div class="run-materials">
+          ${run.materials.map(material => `
+            <label style="display:flex;justify-content:space-between;gap:12px;margin:10px 0;">
+              ${material.name.replace(/\s*\((?:m|pza|pieza)\)\s*$/i, "")} (${material.unit})
+              <input
+                type="number"
+                min="0"
+                step="any"
+                value="${material.actual_quantity}"
+                data-material-id="${material.id}"
+                style="width:100px;"
+                ${run.status === "COMPLETADO" ? "disabled" : ""}
+              >
+            </label>
+          `).join("")}
+        </div>
+        <button class="save-materials" ${run.status === "COMPLETADO" ? "disabled" : ""}>
+          Guardar cantidades
+        </button>
+        ${
+          run.status === "COMPLETADO"
+            ? '<button class="reopen-run">Reabrir tendido</button>'
+            : '<button class="complete-run">Completar tendido</button>'
+        }
+      `;
+
+      fiberRunsContainer.appendChild(card);
+
+      card.querySelector(".save-materials").addEventListener("click", async () => {
+        try {
+          const inputs = card.querySelectorAll("[data-material-id]");
+
+          for (const input of inputs) {
+            const response = await fetch(
+              `/api/fiber-runs/${run.id}/materials/${input.dataset.materialId}`,
+              {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  actual_quantity: Number(input.value)
+                })
+              }
+            );
+
+            const result = await response.json();
+
+            if (!response.ok) throw new Error(result.message);
+          }
+
+          alert("Cantidades guardadas correctamente.");
+          await loadFiberRuns(phaseId);
+
+        } catch (error) {
+          alert(error.message);
+        }
+      });
+
+      const completeButton = card.querySelector(".complete-run");
+
+      if (completeButton) {
+        completeButton.addEventListener("click", async () => {
+          if (!confirm(`¿Completar ${run.name}?`)) return;
+
+          try {
+            const response = await fetch(
+              `/api/fiber-runs/${run.id}/complete`,
+              { method: "PATCH" }
+            );
+
+            const result = await response.json();
+
+            if (!response.ok) throw new Error(result.message);
+
+            alert(result.n8n?.sent
+              ? "Tendido completado. Reporte enviado a n8n."
+              : result.n8n?.error
+                ? `Tendido completado. Error de n8n: ${result.n8n.error}`
+                : "Tendido completado."
+            );
+
+            await loadConstructionPhases();
+            await loadFiberRuns(phaseId);
+
+          } catch (error) {
+            alert(error.message);
+          }
+        });
+      }
+
+      const reopenButton = card.querySelector(".reopen-run");
+
+      if (reopenButton) {
+        reopenButton.addEventListener("click", async () => {
+          if (!confirm(`¿Reabrir ${run.name}?`)) return;
+
+          try {
+            const response = await fetch(
+              `/api/fiber-runs/${run.id}/reopen`,
+              { method: "PATCH" }
+            );
+
+            const result = await response.json();
+
+            if (!response.ok) throw new Error(result.message);
+
+            alert("Tendido reabierto.");
+            await loadConstructionPhases();
+            await loadFiberRuns(phaseId);
+
+          } catch (error) {
+            alert(error.message);
+          }
+        });
+      }
+    });
+
+  } catch (error) {
+    console.error(error);
+    fiberRunsContainer.innerHTML = `<p>${error.message}</p>`;
+  }
+}
+

@@ -1,9 +1,15 @@
 const express = require("express");
+
+
 const path = require("path");
 const db = require("./database");
 const { sendNapToN8n } = require("./services/N8nService");
 
 const app = express();
+
+const fiberRunsRouter = require("./routes/fiberRuns");
+app.use(express.json());
+app.use("/api", fiberRunsRouter);
 
 // Middlewares
 app.use(express.json());

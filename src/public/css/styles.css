@@ -764,3 +764,140 @@ body {
 #phase-materials-container h3 {
   margin-bottom: 12px;
 }
+
+
+/* =====================================
+   MÓDULO DE CONSTRUCCIÓN DE TENDIDOS
+===================================== */
+
+#tendidos-section > h2 {
+  margin-bottom: 20px;
+}
+
+#tendidos-section .card {
+  padding: 22px;
+  margin-bottom: 16px;
+  border-left: 4px solid #2563eb;
+}
+
+#fiber-runs-container {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  align-items: start;
+}
+
+#fiber-runs-container .card {
+  margin-bottom: 0;
+  min-width: 0;
+}
+
+#fiber-runs-container .card h3 {
+  color: #1e293b;
+  font-size: 20px;
+  margin-bottom: 12px;
+}
+
+#fiber-runs-container .card > p {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+  background: #f1f5f9;
+  padding: 6px 10px;
+  border-radius: 7px;
+  margin: 0 6px 16px 0;
+}
+
+#fiber-runs-container .run-materials {
+  border-top: 1px solid #e2e8f0;
+  padding-top: 12px;
+}
+
+#fiber-runs-container .run-materials label {
+  font-size: 13px;
+  color: #475569;
+  padding: 5px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+#fiber-runs-container .run-materials input {
+  width: 105px !important;
+  padding: 8px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 7px;
+  background: white;
+  color: #1e293b;
+  font-size: 14px;
+  text-align: right;
+}
+
+#fiber-runs-container .run-materials input:focus {
+  outline: 2px solid #93c5fd;
+  border-color: #2563eb;
+}
+
+#fiber-runs-container button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  margin: 14px 8px 0 0;
+  transition: 0.2s;
+}
+
+#fiber-runs-container .save-materials,
+#fiber-runs-container .complete-run {
+  background: #2563eb;
+  color: white;
+}
+
+#fiber-runs-container .save-materials:hover,
+#fiber-runs-container .complete-run:hover {
+  background: #1d4ed8;
+}
+
+#fiber-runs-container .reopen-run {
+  background: #fff7ed;
+  color: #c2410c;
+}
+
+#fiber-runs-container .reopen-run:hover {
+  background: #ffedd5;
+}
+
+#fiber-runs-container button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+#construction-phase-select {
+  padding: 10px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 14px;
+  min-width: 180px;
+}
+
+@media (max-width: 900px) {
+  #fiber-runs-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  #fiber-runs-container .card {
+    padding: 16px;
+  }
+
+  #fiber-runs-container .run-materials label {
+    font-size: 12px;
+  }
+}
+
+/* Tendido único: ocupar todo el ancho */
+#fiber-runs-container .card:only-child {
+  grid-column: 1 / -1;
+}

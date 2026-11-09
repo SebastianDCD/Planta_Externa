@@ -18,6 +18,8 @@
           </a>
 
           <a href="#" class="nav-link" data-section="phases"> Fases </a>
+          <a href="#" class="nav-link" data-section="tendidos">
+  Tendidos </a>
 
           <a href="#" class="nav-link" data-section="deliveries"> Entregas </a>
 
@@ -139,7 +141,20 @@
           <div id="phases-container"></div>
         </section>
 
+        <section id="tendidos-section" hidden>
+
+  <div class="card">
+    <label for="construction-phase-select">Fase de construcción</label>
+    <select id="construction-phase-select">
+      <option value="">Selecciona una fase</option>
+    </select>
+  </div>
+
+  <div id="fiber-runs-container"></div>
+</section>
+
         <section id="phase-detail" hidden>
+
           <button id="back-button">← Volver a las fases</button>
 
           <header class="phase-detail-header">

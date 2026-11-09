@@ -1,0 +1,461 @@
+{
+  "system": "Planta Externa",
+  "project": "UACH",
+  "construction_phases": [
+    {
+      "number": 1,
+      "name": "Fase 1",
+      "runs": [
+        {
+          "name": "Troncal 24 hilos",
+          "strand_count": 24,
+          "materials": [
+            {
+              "name": "Postes Usados",
+              "initial_quantity": 40,
+              "unit": "pza"
+            },
+            {
+              "name": "Postes flejados",
+              "initial_quantity": 38,
+              "unit": "pza"
+            },
+            {
+              "name": "Remate cafe (Pieza)",
+              "initial_quantity": 80,
+              "unit": "pza"
+            },
+            {
+              "name": "Cierre de empalme FUSIONGUARD 96 hilos",
+              "initial_quantity": 1,
+              "unit": "pza"
+            },
+            {
+              "name": "Fibra de 24 hilos - SYSCOM (m)",
+              "initial_quantity": 1640,
+              "unit": "m"
+            },
+            {
+              "name": "Raquetas (Pieza)",
+              "initial_quantity": 6,
+              "unit": "pza"
+            },
+            {
+              "name": "Fleje 5/8 (m)",
+              "initial_quantity": 57,
+              "unit": "m"
+            },
+            {
+              "name": "Herrajes tipo D (pieza)",
+              "initial_quantity": 76,
+              "unit": "pza"
+            },
+            {
+              "name": "Acero m",
+              "initial_quantity": 30,
+              "unit": "m"
+            },
+            {
+              "name": "Cierre de empalme primer nivel",
+              "initial_quantity": 1,
+              "unit": "pza"
+            },
+            {
+              "name": "Hebillas 5/8 (Pieza)",
+              "initial_quantity": 38,
+              "unit": "pza"
+            },
+            {
+              "name": "Remates Acero (Pieza)",
+              "initial_quantity": 2,
+              "unit": "pza"
+            },
+            {
+              "name": "Splitter 1X2 (Pieza)",
+              "initial_quantity": 1,
+              "unit": "pza"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "name": "Fase 2",
+      "runs": [
+        {
+          "name": "Brazo 1",
+          "strand_count": 6,
+          "materials": [
+            {
+              "name": "Postes Usados",
+              "initial_quantity": 20,
+              "unit": "pza"
+            },
+            {
+              "name": "Postes flejados",
+              "initial_quantity": 20,
+              "unit": "pza"
+            },
+            {
+              "name": "Remate 6 hilos",
+              "initial_quantity": 39,
+              "unit": "pza"
+            },
+            {
+              "name": "Fibra de 6 hilos - OpticTimes",
+              "initial_quantity": 830,
+              "unit": "m"
+            },
+            {
+              "name": "Raquetas (Pieza)",
+              "initial_quantity": 4,
+              "unit": "pza"
+            },
+            {
+              "name": "Fleje 5/8 (m)",
+              "initial_quantity": 30,
+              "unit": "m"
+            },
+            {
+              "name": "Herrajes tipo D (pieza)",
+              "initial_quantity": 40,
+              "unit": "pza"
+            },
+            {
+              "name": "Acero m",
+              "initial_quantity": 30,
+              "unit": "m"
+            },
+            {
+              "name": "Cierre de empalme primer nivel",
+              "initial_quantity": 1,
+              "unit": "pza"
+            },
+            {
+              "name": "Hebillas 5/8 (Pieza)",
+              "initial_quantity": 20,
+              "unit": "pza"
+            },
+            {
+              "name": "Remates Acero (Pieza)",
+              "initial_quantity": 2,
+              "unit": "pza"
+            }
+          ]
+        },
+        {
+          "name": "Brazo 2",
+          "strand_count": 6,
+          "materials": [
+            {
+              "name": "Postes Usados",
+              "initial_quantity": 11,
+              "unit": "pza"
+            },
+            {
+              "name": "Postes flejados",
+              "initial_quantity": 1,
+              "unit": "pza"
+            },
+            {
+              "name": "Remate 6 hilos",
+              "initial_quantity": 21,
+              "unit": "pza"
+            },
+            {
+              "name": "Fibra de 6 hilos - OpticTimes",
+              "initial_quantity": 450,
+              "unit": "m"
+            },
+            {
+              "name": "Raquetas (Pieza)",
+              "initial_quantity": 0,
+              "unit": "pza"
+            },
+            {
+              "name": "Fleje 5/8 (m)",
+              "initial_quantity": 1.5,
+              "unit": "m"
+            },
+            {
+              "name": "Herrajes tipo D (pieza)",
+              "initial_quantity": 2,
+              "unit": "pza"
+            },
+            {
+              "name": "Acero m",
+              "initial_quantity": 30,
+              "unit": "m"
+            },
+            {
+              "name": "Cierre de empalme primer nivel",
+              "initial_quantity": 1,
+              "unit": "pza"
+            },
+            {
+              "name": "Hebillas 5/8 (Pieza)",
+              "initial_quantity": 1,
+              "unit": "pza"
+            },
+            {
+              "name": "Remates Acero (Pieza)",
+              "initial_quantity": 2,
+              "unit": "pza"
+            }
+          ]
+        },
+        {
+          "name": "Brazo 3",
+          "strand_count": 6,
+          "materials": [
+            {
+              "name": "Postes Usados",
+              "initial_quantity": 75,
+              "unit": "pza"
+            },
+            {
+              "name": "Postes flejados",
+              "initial_quantity": 70,
+              "unit": "pza"
+            },
+            {
+              "name": "Remate 6 hilos",
+              "initial_quantity": 149,
+              "unit": "pza"
+            },
+            {
+              "name": "Fibra de 6 hilos - OpticTimes",
+              "initial_quantity": 450,
+              "unit": "m"
+            },
+            {
+              "name": "Raquetas (Pieza)",
+              "initial_quantity": 10,
+              "unit": "pza"
+            },
+            {
+              "name": "Fleje 5/8 (m)",
+              "initial_quantity": 105,
+              "unit": "m"
+            },
+            {
+              "name": "Herrajes tipo D (pieza)",
+              "initial_quantity": 140,
+              "unit": "pza"
+            },
+            {
+              "name": "Acero m",
+              "initial_quantity": 30,
+              "unit": "m"
+            },
+            {
+              "name": "Cierre de empalme primer nivel",
+              "initial_quantity": 1,
+              "unit": "pza"
+            },
+            {
+              "name": "Hebillas 5/8 (Pieza)",
+              "initial_quantity": 70,
+              "unit": "pza"
+            },
+            {
+              "name": "Remates Acero (Pieza)",
+              "initial_quantity": 2,
+              "unit": "pza"
+            }
+          ]
+        },
+        {
+          "name": "Brazo 4",
+          "strand_count": 6,
+          "materials": [
+            {
+              "name": "Postes Usados",
+              "initial_quantity": 25,
+              "unit": "pza"
+            },
+            {
+              "name": "Postes flejados",
+              "initial_quantity": 23,
+              "unit": "pza"
+            },
+            {
+              "name": "Remate 6 hilos",
+              "initial_quantity": 49,
+              "unit": "pza"
+            },
+            {
+              "name": "Fibra de 6 hilos - OpticTimes",
+              "initial_quantity": 1160,
+              "unit": "m"
+            },
+            {
+              "name": "Raquetas (Pieza)",
+              "initial_quantity": 4,
+              "unit": "pza"
+            },
+            {
+              "name": "Fleje 5/8 (m)",
+              "initial_quantity": 34.5,
+              "unit": "m"
+            },
+            {
+              "name": "Herrajes tipo D (pieza)",
+              "initial_quantity": 46,
+              "unit": "pza"
+            },
+            {
+              "name": "Acero m",
+              "initial_quantity": 50,
+              "unit": "m"
+            },
+            {
+              "name": "Cierre de empalme primer nivel",
+              "initial_quantity": 1,
+              "unit": "pza"
+            },
+            {
+              "name": "Hebillas 5/8 (Pieza)",
+              "initial_quantity": 23,
+              "unit": "pza"
+            },
+            {
+              "name": "Remates Acero (Pieza)",
+              "initial_quantity": 2,
+              "unit": "pza"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "name": "Fase 3",
+      "runs": [
+        {
+          "name": "Brazo 2",
+          "strand_count": 6,
+          "materials": [
+            {
+              "name": "Postes Usados",
+              "initial_quantity": 26,
+              "unit": "pza"
+            },
+            {
+              "name": "Postes flejados",
+              "initial_quantity": 24,
+              "unit": "pza"
+            },
+            {
+              "name": "Remate 6 hilos",
+              "initial_quantity": 51,
+              "unit": "pza"
+            },
+            {
+              "name": "Fibra de 6 hilos - OpticTimes",
+              "initial_quantity": 1300,
+              "unit": "m"
+            },
+            {
+              "name": "Raquetas (Pieza)",
+              "initial_quantity": 4,
+              "unit": "pza"
+            },
+            {
+              "name": "Fleje 5/8 (m)",
+              "initial_quantity": 36,
+              "unit": "m"
+            },
+            {
+              "name": "Herrajes tipo D (pieza)",
+              "initial_quantity": 48,
+              "unit": "pza"
+            },
+            {
+              "name": "Acero m",
+              "initial_quantity": 50,
+              "unit": "m"
+            },
+            {
+              "name": "Cierre de empalme primer nivel",
+              "initial_quantity": 1,
+              "unit": "pza"
+            },
+            {
+              "name": "Hebillas 5/8 (Pieza)",
+              "initial_quantity": 24,
+              "unit": "pza"
+            },
+            {
+              "name": "Remates Acero (Pieza)",
+              "initial_quantity": 2,
+              "unit": "pza"
+            }
+          ]
+        },
+        {
+          "name": "Brazo 1",
+          "strand_count": 6,
+          "materials": [
+            {
+              "name": "Postes Usados",
+              "initial_quantity": 29,
+              "unit": "pza"
+            },
+            {
+              "name": "Postes flejados",
+              "initial_quantity": 24,
+              "unit": "pza"
+            },
+            {
+              "name": "Remate 6 hilos",
+              "initial_quantity": 57,
+              "unit": "pza"
+            },
+            {
+              "name": "Fibra de 6 hilos - OpticTimes",
+              "initial_quantity": 1300,
+              "unit": "m"
+            },
+            {
+              "name": "Raquetas (Pieza)",
+              "initial_quantity": 4,
+              "unit": "pza"
+            },
+            {
+              "name": "Fleje 5/8 (m)",
+              "initial_quantity": 36,
+              "unit": "m"
+            },
+            {
+              "name": "Herrajes tipo D (pieza)",
+              "initial_quantity": 48,
+              "unit": "pza"
+            },
+            {
+              "name": "Acero m",
+              "initial_quantity": 50,
+              "unit": "m"
+            },
+            {
+              "name": "Cierre de empalme primer nivel",
+              "initial_quantity": 1,
+              "unit": "pza"
+            },
+            {
+              "name": "Hebillas 5/8 (Pieza)",
+              "initial_quantity": 24,
+              "unit": "pza"
+            },
+            {
+              "name": "Remates Acero (Pieza)",
+              "initial_quantity": 2,
+              "unit": "pza"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
