@@ -3,8 +3,10 @@ const express = require("express");
 const db = require("../database");
 
 const {
-  sendConstructionPhaseToN8n
+  sendFiberRunToN8n
 } = require("../services/N8nService");
+
+const { randomUUID } = require("crypto");
 
 const router = express.Router();
 
@@ -67,17 +69,24 @@ router.get("/construction-phases/:phaseId/runs", (req, res) => {
     });
   }
 
-  const runs = db.prepare(`
-    SELECT
-      id,
-      name,
-      strand_count,
-      status,
-      completed_at
-    FROM fiber_runs
-    WHERE construction_phase_id = ?
-    ORDER BY id
-  `).all(phaseId);
+
+const runs = db.prepare(`
+  SELECT
+    id,
+    name,
+    strand_count,
+    status,
+    completed_at,
+    n8n_report_id,
+    n8n_status,
+    n8n_sending,
+    n8n_sent_at,
+    n8n_last_error
+  FROM fiber_runs
+  WHERE construction_phase_id = ?
+  ORDER BY id
+`).all(phaseId);
+
 
   const getMaterials = db.prepare(`
     SELECT
@@ -199,28 +208,41 @@ router.patch(
 
 
 // Completar un tendido y enviar la fase a n8n cuando corresponda
-
 router.patch("/fiber-runs/:runId/complete", async (req, res) => {
   const runId = Number(req.params.runId);
 
   if (!Number.isInteger(runId) || runId <= 0) {
-    return res.status(400).json({ success: false, message: "ID inválido." });
+    return res.status(400).json({
+      success: false,
+      message: "ID inválido."
+    });
   }
 
   try {
     const result = db.transaction(() => {
       const run = db.prepare(`
-        SELECT * FROM fiber_runs WHERE id = ?
+        SELECT *
+        FROM fiber_runs
+        WHERE id = ?
       `).get(runId);
 
       if (!run) throw new Error("NOT_FOUND");
       if (run.status === "COMPLETADO") throw new Error("ALREADY_COMPLETED");
 
+      const reportId = randomUUID();
+
       db.prepare(`
         UPDATE fiber_runs
-        SET status = 'COMPLETADO', completed_at = CURRENT_TIMESTAMP
+        SET status = 'COMPLETADO',
+            completed_at = CURRENT_TIMESTAMP,
+            n8n_report_id = ?,
+            n8n_sending = 1,
+            n8n_status = 'PENDING',
+            n8n_sent_at = NULL,
+            n8n_last_error = NULL,
+            updated_at = CURRENT_TIMESTAMP
         WHERE id = ?
-      `).run(runId);
+      `).run(reportId, runId);
 
       db.prepare(`
         INSERT INTO fiber_run_history (fiber_run_id, action, details)
@@ -234,112 +256,91 @@ router.patch("/fiber-runs/:runId/complete", async (req, res) => {
           AND status != 'COMPLETADO'
       `).get(run.construction_phase_id).total;
 
-      if (remaining > 0) {
-        return { phaseCompleted: false, remaining };
+      if (remaining === 0) {
+        db.prepare(`
+          UPDATE construction_phases
+          SET status = 'COMPLETADA',
+              updated_at = CURRENT_TIMESTAMP
+          WHERE id = ?
+        `).run(run.construction_phase_id);
       }
 
-      const phase = db.prepare(`
-        SELECT cp.*, p.name AS project_name
-        FROM construction_phases cp
-        JOIN projects p ON p.id = cp.project_id
-        WHERE cp.id = ?
-      `).get(run.construction_phase_id);
-
-      const nextVersion = phase.report_version + 1;
-      const projectCode = phase.project_name
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .toUpperCase()
-        .replace(/[^A-Z0-9]+/g, "-");
-
-      const reportId =
-        `${projectCode}-FASE-${phase.number}-V${nextVersion}`;
-
-      db.prepare(`
-        UPDATE construction_phases
-        SET status = 'COMPLETADA',
-            report_version = ?,
-            n8n_report_id = ?,
-            n8n_sending = 1,
-            n8n_status = 'PENDING',
-            n8n_sent_at = NULL,
-            n8n_last_error = NULL,
-            updated_at = CURRENT_TIMESTAMP
-        WHERE id = ?
-      `).run(nextVersion, reportId, phase.id);
-
       return {
-        phaseCompleted: true,
-        remaining: 0,
-        phaseId: phase.id,
         reportId,
-        reportVersion: nextVersion
+        phaseCompleted: remaining === 0,
+        remaining
       };
     })();
 
-    if (!result.phaseCompleted) {
-      return res.json({
-        success: true,
-        message: "Tendido completado.",
-        ...result
-      });
-    }
-
     try {
-      const n8nResult = await sendConstructionPhaseToN8n(result.phaseId);
+      const n8nResult = await sendFiberRunToN8n(runId);
 
       db.prepare(`
-        UPDATE construction_phases
+        UPDATE fiber_runs
         SET n8n_sending = 0,
             n8n_status = 'SENT',
             n8n_sent_at = CURRENT_TIMESTAMP,
-            n8n_last_error = NULL
+            n8n_last_error = NULL,
+            updated_at = CURRENT_TIMESTAMP
         WHERE id = ? AND n8n_report_id = ?
-      `).run(result.phaseId, result.reportId);
+      `).run(runId, result.reportId);
 
       return res.json({
         success: true,
-        message: "Fase completada y reporte enviado.",
+        message: "Tendido completado y enviado a n8n.",
         ...result,
         n8n: {
           sent: true,
+          report_id: result.reportId,
           message: n8nResult.message || "JSON recibido por n8n."
         }
       });
+
     } catch (n8nError) {
       db.prepare(`
-        UPDATE construction_phases
+        UPDATE fiber_runs
         SET n8n_sending = 0,
             n8n_status = 'ERROR',
             n8n_last_error = ?,
             updated_at = CURRENT_TIMESTAMP
         WHERE id = ? AND n8n_report_id = ?
-      `).run(n8nError.message, result.phaseId, result.reportId);
+      `).run(n8nError.message, runId, result.reportId);
 
       return res.json({
         success: true,
-        message: "Fase completada, pero falló el envío a n8n.",
+        message: "Tendido completado, pero falló el envío a n8n.",
         ...result,
         n8n: {
           sent: false,
+          report_id: result.reportId,
           error: n8nError.message
         }
       });
     }
+
   } catch (error) {
     if (error.message === "NOT_FOUND") {
-      return res.status(404).json({ success: false, message: "Tendido no encontrado." });
+      return res.status(404).json({
+        success: false,
+        message: "Tendido no encontrado."
+      });
     }
 
     if (error.message === "ALREADY_COMPLETED") {
-      return res.status(409).json({ success: false, message: "El tendido ya está completado." });
+      return res.status(409).json({
+        success: false,
+        message: "El tendido ya está completado."
+      });
     }
 
     console.error("Error al completar tendido:", error);
-    return res.status(500).json({ success: false, message: "Error al completar el tendido." });
+
+    return res.status(500).json({
+      success: false,
+      message: "Error al completar el tendido."
+    });
   }
 });
-
 
 // Reabrir un tendido
 router.patch("/fiber-runs/:runId/reopen", (req, res) => {
@@ -357,18 +358,18 @@ router.patch("/fiber-runs/:runId/reopen", (req, res) => {
 
       if (!run) throw new Error("NOT_FOUND");
       if (run.status !== "COMPLETADO") throw new Error("NOT_COMPLETED");
-
-      const phase = db.prepare(`
-        SELECT n8n_sending
-        FROM construction_phases
-        WHERE id = ?
-      `).get(run.construction_phase_id);
-
-      if (phase.n8n_sending === 1) throw new Error("SENDING");
+      if (run.n8n_sending === 1) throw new Error("SENDING");
 
       db.prepare(`
         UPDATE fiber_runs
-        SET status = 'EN_PROCESO', completed_at = NULL
+        SET status = 'EN_PROCESO',
+            completed_at = NULL,
+            n8n_report_id = NULL,
+            n8n_status = 'PENDING',
+            n8n_sending = 0,
+            n8n_sent_at = NULL,
+            n8n_last_error = NULL,
+            updated_at = CURRENT_TIMESTAMP
         WHERE id = ?
       `).run(runId);
 
@@ -380,9 +381,6 @@ router.patch("/fiber-runs/:runId/reopen", (req, res) => {
       db.prepare(`
         UPDATE construction_phases
         SET status = 'EN_PROCESO',
-            n8n_status = 'PENDING',
-            n8n_sent_at = NULL,
-            n8n_last_error = NULL,
             updated_at = CURRENT_TIMESTAMP
         WHERE id = ?
       `).run(run.construction_phase_id);
@@ -408,74 +406,95 @@ router.patch("/fiber-runs/:runId/reopen", (req, res) => {
     }
 
     console.error("Error al reabrir tendido:", error);
-    return res.status(500).json({ success: false, message: "Error al reabrir el tendido." });
+    return res.status(500).json({
+      success: false,
+      message: "Error al reabrir el tendido."
+    });
   }
 });
 
-// Reintentar envío de una fase de construcción a n8n
-router.post("/construction-phases/:phaseId/retry", async (req, res) => {
-  const phaseId = Number(req.params.phaseId);
 
-  if (!Number.isInteger(phaseId) || phaseId <= 0) {
+ // Reintentar envío de un tendido a n8n
+router.post("/fiber-runs/:runId/retry", async (req, res) => {
+  const runId = Number(req.params.runId);
+
+  if (!Number.isInteger(runId) || runId <= 0) {
     return res.status(400).json({ success: false, message: "ID inválido." });
   }
 
   try {
-    const phase = db.prepare(`
-      SELECT *
-      FROM construction_phases
-      WHERE id = ?
-    `).get(phaseId);
+    const run = db.prepare(`
+      SELECT * FROM fiber_runs WHERE id = ?
+    `).get(runId);
 
-    if (!phase) {
-      return res.status(404).json({ success: false, message: "Fase no encontrada." });
+    if (!run) {
+      return res.status(404).json({
+        success: false,
+        message: "Tendido no encontrado."
+      });
     }
 
-    if (phase.status !== "COMPLETADA") {
-      return res.status(409).json({ success: false, message: "La fase no está completada." });
+    if (run.status !== "COMPLETADO") {
+      return res.status(409).json({
+        success: false,
+        message: "El tendido no está completado."
+      });
     }
 
-    if (phase.n8n_status === "SENT") {
-      return res.status(409).json({ success: false, message: "Este reporte ya fue enviado." });
+    if (run.n8n_status === "SENT") {
+      return res.status(409).json({
+        success: false,
+        message: "Este reporte ya fue enviado."
+      });
     }
 
-    if (phase.n8n_sending === 1) {
-      return res.status(409).json({ success: false, message: "Ya existe un envío en curso." });
+    if (run.n8n_sending === 1) {
+      return res.status(409).json({
+        success: false,
+        message: "Ya existe un envío en curso."
+      });
     }
 
-    if (!phase.n8n_report_id) {
-      return res.status(409).json({ success: false, message: "La fase no tiene un identificador de reporte." });
+    if (!run.n8n_report_id) {
+      return res.status(409).json({
+        success: false,
+        message: "El tendido no tiene un identificador de reporte."
+      });
     }
 
     const lock = db.prepare(`
-      UPDATE construction_phases
+      UPDATE fiber_runs
       SET n8n_sending = 1
       WHERE id = ?
         AND n8n_sending = 0
         AND n8n_status != 'SENT'
-    `).run(phaseId);
+        AND n8n_report_id = ?
+    `).run(runId, run.n8n_report_id);
 
     if (lock.changes !== 1) {
-      return res.status(409).json({ success: false, message: "No fue posible reservar el envío. Intenta nuevamente." });
+      return res.status(409).json({
+        success: false,
+        message: "No fue posible reservar el envío. Intenta nuevamente."
+      });
     }
 
     try {
-      const n8nResult = await sendConstructionPhaseToN8n(phaseId);
+      const n8nResult = await sendFiberRunToN8n(runId);
 
       db.prepare(`
-        UPDATE construction_phases
+        UPDATE fiber_runs
         SET n8n_sending = 0,
             n8n_status = 'SENT',
             n8n_sent_at = CURRENT_TIMESTAMP,
             n8n_last_error = NULL,
             updated_at = CURRENT_TIMESTAMP
         WHERE id = ? AND n8n_report_id = ?
-      `).run(phaseId, phase.n8n_report_id);
+      `).run(runId, run.n8n_report_id);
 
       return res.json({
         success: true,
         message: "Reporte enviado correctamente.",
-        report_id: phase.n8n_report_id,
+        report_id: run.n8n_report_id,
         n8n: {
           sent: true,
           message: n8nResult.message || "JSON recibido por n8n."
@@ -483,25 +502,29 @@ router.post("/construction-phases/:phaseId/retry", async (req, res) => {
       });
     } catch (n8nError) {
       db.prepare(`
-        UPDATE construction_phases
+        UPDATE fiber_runs
         SET n8n_sending = 0,
             n8n_status = 'ERROR',
             n8n_last_error = ?,
             updated_at = CURRENT_TIMESTAMP
         WHERE id = ? AND n8n_report_id = ?
-      `).run(n8nError.message, phaseId, phase.n8n_report_id);
+      `).run(n8nError.message, runId, run.n8n_report_id);
 
       return res.status(502).json({
         success: false,
         message: "No se pudo enviar el reporte a n8n.",
-        report_id: phase.n8n_report_id,
+        report_id: run.n8n_report_id,
         error: n8nError.message
       });
     }
   } catch (error) {
-    console.error("Error al reintentar envío:", error);
-    return res.status(500).json({ success: false, message: "Error al procesar el reintento." });
+    console.error("Error al reintentar envío del tendido:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error al procesar el reintento."
+    });
   }
 });
+
 
 module.exports = router;

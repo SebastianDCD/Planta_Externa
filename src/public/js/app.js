@@ -723,6 +723,7 @@ async function loadConstructionPhases() {
   }
 }
 
+
 async function loadFiberRuns(phaseId) {
   try {
     const response = await fetch(
@@ -737,135 +738,196 @@ async function loadFiberRuns(phaseId) {
 
     fiberRunsContainer.innerHTML = "";
 
-[...result.data]
-  .sort((a, b) => a.name.localeCompare(b.name, "es", { numeric: true }))
-  .forEach(run => {
-      const card = document.createElement("article");
-      card.className = "card";
+    [...result.data]
+      .sort((a, b) => a.name.localeCompare(b.name, "es", { numeric: true }))
+      .forEach(run => {
+        const card = document.createElement("article");
+        card.className = "card";
 
-      card.innerHTML = `
-        <h3>${run.name}</h3>
-        <p>Hilos: ${run.strand_count}</p>
-        <p>Estado: ${run.status}</p>
-        <div class="run-materials">
-          ${run.materials.map(material => `
-            <label style="display:flex;justify-content:space-between;gap:12px;margin:10px 0;">
-              ${material.name.replace(/\s*\((?:m|pza|pieza)\)\s*$/i, "")} (${material.unit})
-              <input
-                type="number"
-                min="0"
-                step="any"
-                value="${material.actual_quantity}"
-                data-material-id="${material.id}"
-                style="width:100px;"
-                ${run.status === "COMPLETADO" ? "disabled" : ""}
-              >
-            </label>
-          `).join("")}
-        </div>
-        <button class="save-materials" ${run.status === "COMPLETADO" ? "disabled" : ""}>
-          Guardar cantidades
-        </button>
-        ${
-          run.status === "COMPLETADO"
-            ? '<button class="reopen-run">Reabrir tendido</button>'
-            : '<button class="complete-run">Completar tendido</button>'
-        }
-      `;
+        const n8nStatus = run.n8n_sending === 1
+          ? "ENVIANDO"
+          : run.n8n_status === "SENT"
+            ? "ENVIADO"
+            : run.n8n_status === "ERROR"
+              ? "ERROR"
+              : "PENDIENTE";
 
-      fiberRunsContainer.appendChild(card);
+        card.innerHTML = `
+          <h3>${run.name}</h3>
+          <p>Hilos: ${run.strand_count}</p>
+          <p>Estado: ${run.status}</p>
+          <p>Envío a n8n: ${n8nStatus}</p>
 
-      card.querySelector(".save-materials").addEventListener("click", async () => {
-        try {
-          const inputs = card.querySelectorAll("[data-material-id]");
-
-          for (const input of inputs) {
-            const response = await fetch(
-              `/api/fiber-runs/${run.id}/materials/${input.dataset.materialId}`,
-              {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  actual_quantity: Number(input.value)
-                })
-              }
-            );
-
-            const result = await response.json();
-
-            if (!response.ok) throw new Error(result.message);
+          ${
+            run.n8n_last_error
+              ? `<p class="error-message">Error: ${run.n8n_last_error}</p>`
+              : ""
           }
 
-          alert("Cantidades guardadas correctamente.");
-          await loadFiberRuns(phaseId);
+          <div class="run-materials">
+            ${run.materials.map(material => `
+              <label style="display:flex;justify-content:space-between;gap:12px;margin:10px 0;">
+                ${material.name.replace(/\s*\((?:m|pza|pieza)\)\s*$/i, "")} (${material.unit})
+                <input
+                  type="number"
+                  min="0"
+                  step="any"
+                  value="${material.actual_quantity}"
+                  data-material-id="${material.id}"
+                  style="width:100px;"
+                  ${run.status === "COMPLETADO" ? "disabled" : ""}
+                >
+              </label>
+            `).join("")}
+          </div>
 
-        } catch (error) {
-          alert(error.message);
+          <button class="save-materials" ${run.status === "COMPLETADO" ? "disabled" : ""}>
+            Guardar cantidades
+          </button>
+
+          ${
+            run.status === "COMPLETADO"
+              ? `
+                <button class="reopen-run">Reabrir tendido</button>
+                ${
+                  run.n8n_status === "ERROR" && run.n8n_sending !== 1
+                    ? '<button class="retry-run">Reintentar envío a n8n</button>'
+                    : ""
+                }
+              `
+              : '<button class="complete-run">Completar tendido</button>'
+          }
+        `;
+
+        fiberRunsContainer.appendChild(card);
+
+        // Guardar cantidades
+        card.querySelector(".save-materials").addEventListener("click", async () => {
+          try {
+            const inputs = card.querySelectorAll("[data-material-id]");
+
+            for (const input of inputs) {
+              const response = await fetch(
+                `/api/fiber-runs/${run.id}/materials/${input.dataset.materialId}`,
+                {
+                  method: "PATCH",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    actual_quantity: Number(input.value)
+                  })
+                }
+              );
+
+              const result = await response.json();
+
+              if (!response.ok) throw new Error(result.message);
+            }
+
+            alert("Cantidades guardadas correctamente.");
+            await loadFiberRuns(phaseId);
+
+          } catch (error) {
+            alert(error.message);
+          }
+        });
+
+        // Completar tendido
+        const completeButton = card.querySelector(".complete-run");
+
+        if (completeButton) {
+          completeButton.addEventListener("click", async () => {
+            if (!confirm(`¿Completar ${run.name}?`)) return;
+
+            try {
+              const response = await fetch(
+                `/api/fiber-runs/${run.id}/complete`,
+                { method: "PATCH" }
+              );
+
+              const result = await response.json();
+
+              if (!response.ok) throw new Error(result.message);
+
+              alert(
+                result.n8n?.sent
+                  ? "Tendido completado. Reporte enviado a n8n."
+                  : result.n8n?.error
+                    ? `Tendido completado. Error de n8n: ${result.n8n.error}`
+                    : "Tendido completado."
+              );
+
+              await loadConstructionPhases();
+              await loadFiberRuns(phaseId);
+
+            } catch (error) {
+              alert(error.message);
+            }
+          });
+        }
+
+        // Reabrir tendido
+        const reopenButton = card.querySelector(".reopen-run");
+
+        if (reopenButton) {
+          reopenButton.addEventListener("click", async () => {
+            if (!confirm(`¿Reabrir ${run.name}?`)) return;
+
+            try {
+              const response = await fetch(
+                `/api/fiber-runs/${run.id}/reopen`,
+                { method: "PATCH" }
+              );
+
+              const result = await response.json();
+
+              if (!response.ok) throw new Error(result.message);
+
+              alert("Tendido reabierto.");
+              await loadConstructionPhases();
+              await loadFiberRuns(phaseId);
+
+            } catch (error) {
+              alert(error.message);
+            }
+          });
+        }
+
+        // Reintentar envío a n8n
+        const retryButton = card.querySelector(".retry-run");
+
+        if (retryButton) {
+          retryButton.addEventListener("click", async () => {
+            if (!confirm(`¿Reintentar el envío de ${run.name} a n8n?`)) return;
+
+            try {
+              retryButton.disabled = true;
+              retryButton.textContent = "Enviando...";
+
+              const response = await fetch(
+                `/api/fiber-runs/${run.id}/retry`,
+                { method: "POST" }
+              );
+
+              const result = await response.json();
+
+              if (!response.ok) throw new Error(result.message);
+
+              alert("Reporte enviado correctamente a n8n.");
+
+              await loadFiberRuns(phaseId);
+
+            } catch (error) {
+              alert(error.message);
+              await loadFiberRuns(phaseId);
+            }
+          });
         }
       });
-
-      const completeButton = card.querySelector(".complete-run");
-
-      if (completeButton) {
-        completeButton.addEventListener("click", async () => {
-          if (!confirm(`¿Completar ${run.name}?`)) return;
-
-          try {
-            const response = await fetch(
-              `/api/fiber-runs/${run.id}/complete`,
-              { method: "PATCH" }
-            );
-
-            const result = await response.json();
-
-            if (!response.ok) throw new Error(result.message);
-
-            alert(result.n8n?.sent
-              ? "Tendido completado. Reporte enviado a n8n."
-              : result.n8n?.error
-                ? `Tendido completado. Error de n8n: ${result.n8n.error}`
-                : "Tendido completado."
-            );
-
-            await loadConstructionPhases();
-            await loadFiberRuns(phaseId);
-
-          } catch (error) {
-            alert(error.message);
-          }
-        });
-      }
-
-      const reopenButton = card.querySelector(".reopen-run");
-
-      if (reopenButton) {
-        reopenButton.addEventListener("click", async () => {
-          if (!confirm(`¿Reabrir ${run.name}?`)) return;
-
-          try {
-            const response = await fetch(
-              `/api/fiber-runs/${run.id}/reopen`,
-              { method: "PATCH" }
-            );
-
-            const result = await response.json();
-
-            if (!response.ok) throw new Error(result.message);
-
-            alert("Tendido reabierto.");
-            await loadConstructionPhases();
-            await loadFiberRuns(phaseId);
-
-          } catch (error) {
-            alert(error.message);
-          }
-        });
-      }
-    });
 
   } catch (error) {
     console.error(error);
     fiberRunsContainer.innerHTML = `<p>${error.message}</p>`;
   }
 }
+
 

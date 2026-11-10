@@ -206,9 +206,94 @@ async function sendConstructionPhaseToN8n(constructionPhaseId) {
 // EXPORTACIONES
 // ======================================================
 
+
+function buildFiberRunPayload(runId) {
+  const run = db.prepare(`
+    SELECT
+      fr.id,
+      fr.name,
+      fr.strand_count,
+      fr.status,
+      fr.completed_at,
+      fr.n8n_report_id,
+      fr.construction_phase_id,
+      cp.number AS phase_number,
+      cp.name AS phase_name,
+      p.id AS project_id,
+      p.name AS project_name
+    FROM fiber_runs fr
+    JOIN construction_phases cp
+      ON cp.id = fr.construction_phase_id
+    JOIN projects p
+      ON p.id = cp.project_id
+    WHERE fr.id = ?
+  `).get(runId);
+
+  if (!run) throw new Error("Tendido no encontrado.");
+
+  if (run.status !== "COMPLETADO") {
+    throw new Error("El tendido todavía no está completado.");
+  }
+
+  if (!run.n8n_report_id) {
+    throw new Error("El tendido no tiene identificador de reporte.");
+  }
+
+  const materials = db.prepare(`
+    SELECT name, actual_quantity, unit
+    FROM fiber_run_materials
+    WHERE fiber_run_id = ?
+    ORDER BY id
+  `).all(runId);
+
+  const excluded = ["postes usados", "postes flejados"];
+
+  return {
+    source: "planta-externa",
+    event: "FIBER_RUN_COMPLETED",
+    report_id: run.n8n_report_id,
+
+    project: {
+      id: run.project_id,
+      name: run.project_name
+    },
+
+    construction_phase: {
+      id: run.construction_phase_id,
+      number: run.phase_number,
+      name: run.phase_name
+    },
+
+    fiber_run: {
+      id: run.id,
+      name: run.name,
+      strand_count: run.strand_count,
+      completed_at: run.completed_at
+    },
+
+    materials: materials
+      .filter(material =>
+        !excluded.includes(material.name.trim().toLowerCase())
+      )
+      .map(material => ({
+        name: material.name,
+        actual_quantity: material.actual_quantity,
+        unit: material.unit
+      }))
+  };
+}
+
+async function sendFiberRunToN8n(runId) {
+  const payload = buildFiberRunPayload(runId);
+  return await postToN8n(payload);
+}
+
+
 module.exports = {
   buildNapPayload,
   sendNapToN8n,
   buildConstructionPhasePayload,
-  sendConstructionPhaseToN8n
+  sendConstructionPhaseToN8n,
+  buildFiberRunPayload,
+  sendFiberRunToN8n
 };
