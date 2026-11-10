@@ -289,11 +289,121 @@ async function sendFiberRunToN8n(runId) {
 }
 
 
+// ======================================================
+// REPORTE INDIVIDUAL DE DISTRIBUCIÓN NAP
+// ======================================================
+
+function buildNapDistributionPayload(napId) {
+  const nap = db.prepare(`
+    SELECT
+      n.id AS nap_id,
+      n.number AS nap_number,
+      n.construction_status,
+      ndr.report_id,
+      ndr.completed_at,
+
+      p.id AS project_id,
+      p.name AS project_name,
+
+      ph.id AS first_level_id,
+      ph.name AS first_level_name,
+      ph.display_code,
+
+      cp.id AS construction_phase_id,
+      cp.number AS construction_phase_number,
+      cp.name AS construction_phase_name
+
+    FROM naps n
+    JOIN phases ph ON ph.id = n.phase_id
+    JOIN projects p ON p.id = ph.project_id
+
+    JOIN construction_phase_groups cpg
+      ON cpg.phase_id = ph.id
+
+    JOIN construction_phases cp
+      ON cp.id = cpg.construction_phase_id
+
+    JOIN nap_distribution_reports ndr
+      ON ndr.nap_id = n.id
+
+    WHERE n.id = ?
+  `).get(napId);
+
+  if (!nap) {
+    throw new Error("No se encontró la NAP de distribución.");
+  }
+
+  if (!nap.report_id) {
+    throw new Error("La NAP no tiene identificador de reporte.");
+  }
+
+  const materials = db.prepare(`
+    SELECT
+      c.name,
+      dm.actual_quantity,
+      c.unit
+    FROM nap_distribution_materials dm
+    JOIN nap_distribution_material_catalog c
+      ON c.id = dm.catalog_id
+    WHERE dm.nap_id = ?
+      AND dm.actual_quantity IS NOT NULL
+    ORDER BY c.id
+  `).all(napId);
+
+  return {
+    source: "planta-externa",
+    event: "NAP_DISTRIBUTION_COMPLETED",
+    report_id: nap.report_id,
+
+    project: {
+      id: nap.project_id,
+      name: nap.project_name
+    },
+
+    construction_phase: {
+      id: nap.construction_phase_id,
+      number: nap.construction_phase_number,
+      name: nap.construction_phase_name
+    },
+
+    first_level: {
+      id: nap.first_level_id,
+      name: nap.first_level_name,
+      display_code: nap.display_code
+    },
+
+    nap: {
+      id: nap.nap_id,
+      number: nap.nap_number,
+      construction_status: nap.construction_status,
+      completed_at: nap.completed_at
+    },
+
+    materials: materials.map(material => ({
+      name: material.name,
+      actual_quantity: material.actual_quantity,
+      unit: material.unit
+    }))
+  };
+}
+
+async function sendNapDistributionToN8n(napId) {
+  const payload = buildNapDistributionPayload(napId);
+  return await postToN8n(payload);
+}
+
+
+// ======================================================
+// EXPORTACIONES
+// ======================================================
+
 module.exports = {
   buildNapPayload,
   sendNapToN8n,
   buildConstructionPhasePayload,
   sendConstructionPhaseToN8n,
   buildFiberRunPayload,
-  sendFiberRunToN8n
+  sendFiberRunToN8n,
+  buildNapDistributionPayload,
+  sendNapDistributionToN8n
 };

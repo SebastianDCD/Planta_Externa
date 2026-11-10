@@ -17,9 +17,10 @@
             Panel principal
           </a>
 
-          <a href="#" class="nav-link" data-section="phases"> Fases </a>
-          <a href="#" class="nav-link" data-section="tendidos">
-  Tendidos </a>
+          <a href="#" class="nav-link" data-section="phases">
+            Registro de NAP
+          </a>
+          <a href="#" class="nav-link" data-section="tendidos"> Tendidos </a>
 
           <a href="#" class="nav-link" data-section="deliveries"> Entregas </a>
 
@@ -37,46 +38,89 @@
           <span>MONITOREO PLANTA EXTERNA</span>
         </header>
 
+        <section id="dashboard-section" class="dashboard-cards">
+          <article class="card project-card">
+            <span>PROYECTO ACTIVO</span>
+            <h2>UACH</h2>
+            <p>Control de construcción de planta externa</p>
+          </article>
 
-<section id="dashboard-section" class="dashboard-cards">
+          <article class="card">
+            <h3>Fases del proyecto</h3>
+            <p>09</p>
+          </article>
 
-  <article class="card project-card">
-    <span>PROYECTO ACTIVO</span>
-    <h2>UACH</h2>
-    <p>Control de construcción de planta externa</p>
-  </article>
+          <article class="card">
+            <h3>Metraje planeado</h3>
+            <p id="total-meters">0 m</p>
+          </article>
 
-  <article class="card">
-    <h3>Fases del proyecto</h3>
-    <p>09</p>
-  </article>
+          <article class="card">
+            <h3>Metros construidos</h3>
+            <p id="completed-meters">0 m</p>
+          </article>
 
-  <article class="card">
-    <h3>Metraje planeado</h3>
-    <p id="total-meters">0 m</p>
-  </article>
+          <article class="card">
+            <h3>NAP terminadas</h3>
+            <p id="completed-naps">0 / 72</p>
+          </article>
 
-  <article class="card">
-    <h3>Metros construidos</h3>
-    <p id="completed-meters">0 m</p>
-  </article>
+          <article class="card">
+            <h3>Fases con avance</h3>
+            <p id="completed-phases">0 / 9</p>
+          </article>
 
-  <article class="card">
-    <h3>NAP terminadas</h3>
-    <p id="completed-naps">0 / 72</p>
-  </article>
+          <article class="card">
+            <h3>NAP planeadas</h3>
+            <p>72</p>
+          </article>
 
-  <article class="card">
-    <h3>Fases con avance</h3>
-    <p id="completed-phases">0 / 9</p>
-  </article>
+          <div class="dashboard-lower">
+            <section class="card dashboard-progress">
+              <div class="dashboard-section-heading">
+                <div>
+                  <h2>Avance por fase</h2>
+                  <p>Seguimiento de construcción del proyecto</p>
+                </div>
+              </div>
 
-  <article class="card">
-    <h3>NAP planeadas</h3>
-    <p>72</p>
-  </article>
+              <div id="dashboard-phase-progress"></div>
+            </section>
 
-</section>
+            <section class="card dashboard-shortcuts">
+              <h2>Accesos rápidos</h2>
+              <p>Consulta y administra la operación</p>
+
+              <button class="dashboard-shortcut" data-go="phases">
+                <span class="shortcut-icon">01</span>
+                <span>
+                  <strong>Registro de NAP</strong>
+                  <small>Consultar fases y NAP registradas</small>
+                </span>
+                <span class="shortcut-arrow">›</span>
+              </button>
+
+              <button class="dashboard-shortcut" data-go="tendidos">
+                <span class="shortcut-icon">02</span>
+                <span>
+                  <strong>Tendidos</strong>
+                  <small>Construcción y distribución de materiales</small>
+                </span>
+                <span class="shortcut-arrow">›</span>
+              </button>
+
+              <button class="dashboard-shortcut" data-go="progress">
+                <span class="shortcut-icon">03</span>
+                <span>
+                  <strong>Avances</strong>
+                  <small>Consultar el progreso general</small>
+                </span>
+                <span class="shortcut-arrow">›</span>
+              </button>
+            </section>
+          </div>
+        </section>
+
         <section id="progress-section" hidden>
           <h2>Avance general del proyecto</h2>
 
@@ -97,44 +141,54 @@
             </article>
           </div>
 
-          <h2>Avance por fase</h2>
+          <div class="progress-dashboard-layout">
+            <div class="progress-dashboard-column">
+              <h2>Avance por fase de construcción</h2>
+              <div id="construction-phase-progress-container"></div>
+            </div>
 
-          <div id="progress-container"></div>
+            <div class="progress-dashboard-column">
+              <h2>Avance por grupo de NAP</h2>
+              <div id="progress-container"></div>
+            </div>
+          </div>
         </section>
 
         <section id="materials-section" hidden>
-  <h2>Inventario de materiales</h2>
+          <h2>Inventario de materiales</h2>
 
-<div class="card">
-  <label for="materials-phase-select">Consultar materiales por fase</label>
+          <div class="card">
+            <label for="materials-phase-select"
+              >Consultar materiales por fase</label
+            >
 
-  <select id="materials-phase-select">
-    <option value="">Selecciona una fase</option>
-  </select>
-</div>
+            <select id="materials-phase-select">
+              <option value="">Selecciona una fase</option>
+            </select>
+          </div>
 
-<div id="phase-materials-container"></div>
+          <div id="phase-materials-container"></div>
 
-  <div class="progress-summary">
-    <article class="card">
-      <h3>Materiales registrados</h3>
-      <p id="materials-count">0</p>
-    </article>
+          <div class="progress-summary">
+            <article class="card">
+              <h3>Materiales registrados</h3>
+              <p id="materials-count">0</p>
+            </article>
 
-    <article class="card">
-      <h3>NAP contempladas</h3>
-      <p id="materials-naps">0</p>
-    </article>
-  </div>
+            <article class="card">
+              <h3>NAP contempladas</h3>
+              <p id="materials-naps">0</p>
+            </article>
+          </div>
 
-  <div class="card">
-    <h3>Concentrado de materiales</h3>
+          <div class="card">
+            <h3>Concentrado de materiales</h3>
 
-    <div id="materials-container">
-      <p>Cargando materiales...</p>
-    </div>
-  </div>
-</section>
+            <div id="materials-container">
+              <p>Cargando materiales...</p>
+            </div>
+          </div>
+        </section>
 
         <section id="phases-section" class="phases-section" hidden>
           <h2>Fases del proyecto</h2>
@@ -142,19 +196,18 @@
         </section>
 
         <section id="tendidos-section" hidden>
+          <div class="card">
+            <label for="construction-phase-select">Fase de construcción</label>
+            <select id="construction-phase-select">
+              <option value="">Selecciona una fase</option>
+            </select>
+          </div>
 
-  <div class="card">
-    <label for="construction-phase-select">Fase de construcción</label>
-    <select id="construction-phase-select">
-      <option value="">Selecciona una fase</option>
-    </select>
-  </div>
-
-  <div id="fiber-runs-container"></div>
-</section>
+          <div id="fiber-runs-container"></div>
+          <div id="nap-distribution-container"></div>
+        </section>
 
         <section id="phase-detail" hidden>
-
           <button id="back-button">← Volver a las fases</button>
 
           <header class="phase-detail-header">
@@ -168,17 +221,17 @@
           </div>
 
           <div class="card progress-card">
-  <h3>Avance de construcción de la fase</h3>
+            <h3>Avance de construcción de la fase</h3>
 
-  <div class="progress-info">
-    <span id="completed-count">0 de 8 NAP terminadas</span>
-    <strong id="progress-percentage">0%</strong>
-  </div>
+            <div class="progress-info">
+              <span id="completed-count">0 de 8 NAP terminadas</span>
+              <strong id="progress-percentage">0%</strong>
+            </div>
 
-  <div class="progress-bar">
-    <div id="progress-fill"></div>
-  </div>
-</div>
+            <div class="progress-bar">
+              <div id="progress-fill"></div>
+            </div>
+          </div>
 
           <h3>NAP de la fase</h3>
 

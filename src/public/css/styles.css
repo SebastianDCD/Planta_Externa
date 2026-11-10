@@ -901,3 +901,992 @@ body {
 #fiber-runs-container .card:only-child {
   grid-column: 1 / -1;
 }
+
+/* =========================================
+   DISTRIBUCIÓN NAP
+========================================= */
+
+#nap-distribution-container {
+  margin-top: 24px;
+}
+
+#nap-distribution-container > h2 {
+  font-size: 23px;
+  margin: 26px 0 18px;
+  color: #1e293b;
+}
+
+.nap-distribution-group {
+  margin-bottom: 22px;
+  padding: 22px;
+  border-left: 4px solid #2563eb;
+}
+
+.distribution-group-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.distribution-group-code {
+  display: inline-block;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  margin-bottom: 5px;
+}
+
+.distribution-group-header h3 {
+  font-size: 20px;
+  color: #1e293b;
+}
+
+.distribution-group-count {
+  background: #eff6ff;
+  color: #1d4ed8;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.nap-distribution-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.nap-distribution-card {
+  min-width: 0;
+  margin: 0;
+  padding: 20px;
+  border: 1px solid #e2e8f0;
+  border-top: 3px solid #2563eb;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+.nap-distribution-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.nap-distribution-header h4 {
+  font-size: 18px;
+  color: #1e293b;
+  margin-bottom: 5px;
+}
+
+.nap-distribution-meters {
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.nap-distribution-status {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.distribution-badge {
+  display: inline-block;
+  padding: 6px 9px;
+  border-radius: 7px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+.distribution-badge.completed,
+.distribution-badge.sent {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.distribution-badge.in-progress,
+.distribution-badge.pending {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.distribution-badge.sending {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.distribution-badge.error {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.nap-distribution-materials {
+  border-top: 1px solid #e2e8f0;
+  padding-top: 15px;
+}
+
+.nap-distribution-materials h5 {
+  font-size: 13px;
+  color: #475569;
+  margin-bottom: 12px;
+}
+
+.distribution-materials-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.distribution-materials-grid .distribution-material {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 8px;
+  align-items: center;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 9px;
+  padding: 10px;
+  margin: 0;
+  min-width: 0;
+}
+
+.distribution-material span {
+  color: #475569;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.distribution-material small {
+  color: #94a3b8;
+  font-size: 10px;
+}
+
+.distribution-material input {
+  grid-column: 1 / -1;
+  width: 100%;
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 7px;
+  background: white;
+  color: #1e293b;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.distribution-material input:focus {
+  outline: 2px solid #bfdbfe;
+  border-color: #2563eb;
+}
+
+.distribution-material input:disabled {
+  background: #f1f5f9;
+  color: #64748b;
+  cursor: not-allowed;
+}
+
+.nap-distribution-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 16px;
+}
+
+.nap-distribution-actions button {
+  border: none;
+  border-radius: 8px;
+  padding: 10px 13px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.nap-distribution-actions button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.nap-distribution-actions .save-nap-distribution {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.nap-distribution-actions .save-nap-distribution:hover:not(:disabled) {
+  background: #dbeafe;
+}
+
+.nap-distribution-actions .complete-nap-distribution {
+  background: #2563eb;
+  color: white;
+}
+
+.nap-distribution-actions .complete-nap-distribution:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+.nap-distribution-actions .reopen-nap-distribution {
+  background: #fff7ed;
+  color: #c2410c;
+}
+
+.nap-distribution-actions .retry-nap-distribution {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.nap-distribution-actions button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.nap-distribution-card .error-message {
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+
+/* Adaptación a pantallas medianas */
+
+@media (max-width: 1100px) {
+  .nap-distribution-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Adaptación móvil */
+
+@media (max-width: 600px) {
+  .nap-distribution-group {
+    padding: 15px;
+  }
+
+  .distribution-group-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .nap-distribution-card {
+    padding: 15px;
+  }
+
+  .nap-distribution-header {
+    flex-direction: column;
+  }
+
+  .nap-distribution-status {
+    flex-direction: row;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .distribution-materials-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .nap-distribution-actions {
+    flex-direction: column;
+  }
+
+  .nap-distribution-actions button {
+    width: 100%;
+  }
+}
+
+/* =========================================
+   DASHBOARD PRINCIPAL
+========================================= */
+
+.dashboard-cards {
+  margin-bottom: 22px;
+}
+
+.dashboard-cards > .card {
+  border-radius: 14px;
+}
+
+.dashboard-cards > .card:not(.project-card) {
+  padding: 22px;
+  border-top-width: 4px;
+}
+
+.dashboard-cards > .card:not(.project-card) h3 {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.dashboard-cards > .card:not(.project-card) p {
+  font-size: 29px;
+}
+
+.dashboard-lower {
+  grid-column: 1 / -1;
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.dashboard-lower > .card {
+  padding: 24px;
+  min-width: 0;
+}
+
+.dashboard-section-heading {
+  margin-bottom: 22px;
+}
+
+.dashboard-section-heading h2,
+.dashboard-shortcuts h2 {
+  color: #1e293b;
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+
+.dashboard-section-heading p,
+.dashboard-shortcuts > p {
+  color: #64748b;
+  font-size: 13px;
+}
+
+.dashboard-phase-item {
+  margin-bottom: 19px;
+}
+
+.dashboard-phase-item:last-child {
+  margin-bottom: 0;
+}
+
+.dashboard-phase-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.dashboard-phase-header strong {
+  color: #334155;
+  font-size: 13px;
+}
+
+.dashboard-phase-header span {
+  color: #64748b;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.dashboard-phase-bar {
+  width: 100%;
+  height: 8px;
+  background: #e2e8f0;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.dashboard-phase-fill {
+  height: 100%;
+  background: #16a34a;
+  border-radius: 20px;
+  transition: width 0.4s ease;
+}
+
+.dashboard-shortcuts > p {
+  margin-bottom: 18px;
+}
+
+.dashboard-shortcut {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 10px;
+  border: none;
+  border-bottom: 1px solid #e2e8f0;
+  background: white;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.dashboard-shortcut:last-child {
+  border-bottom: none;
+}
+
+.dashboard-shortcut:hover {
+  background: #f8fafc;
+}
+
+.shortcut-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 9px;
+  background: #eff6ff;
+  color: #2563eb;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.dashboard-shortcut > span:nth-child(2) {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.dashboard-shortcut strong {
+  color: #1e293b;
+  font-size: 13px;
+}
+
+.dashboard-shortcut small {
+  color: #64748b;
+  font-size: 11px;
+}
+
+.shortcut-arrow {
+  margin-left: auto;
+  color: #94a3b8;
+  font-size: 23px;
+}
+
+@media (max-width: 900px) {
+  .dashboard-lower {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .dashboard-lower > .card {
+    padding: 17px;
+  }
+
+  .dashboard-phase-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+  }
+}
+
+/* =========================================
+   CONSTRUCCIÓN DE TENDIDOS
+========================================= */
+
+#fiber-runs-container .fiber-run-card {
+  padding: 22px;
+  border-top: 3px solid #2563eb;
+  border-radius: 12px;
+}
+
+.fiber-run-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.fiber-run-header h3 {
+  font-size: 19px;
+  color: #1e293b;
+  margin-bottom: 6px;
+}
+
+.fiber-run-strands {
+  font-size: 13px;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.fiber-run-status {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+#fiber-runs-container .run-materials {
+  border-top: 1px solid #e2e8f0;
+  padding-top: 16px;
+}
+
+#fiber-runs-container .run-materials h5 {
+  font-size: 13px;
+  color: #475569;
+  margin-bottom: 12px;
+}
+
+.fiber-materials-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.fiber-materials-grid .fiber-material {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 8px;
+  align-items: center;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 9px;
+  padding: 10px;
+  min-width: 0;
+}
+
+.fiber-material span {
+  color: #475569;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.fiber-material small {
+  color: #94a3b8;
+  font-size: 10px;
+}
+
+.fiber-material input {
+  grid-column: 1 / -1;
+  width: 100%;
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 7px;
+  background: white;
+  color: #1e293b;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.fiber-material input:focus {
+  outline: 2px solid #bfdbfe;
+  border-color: #2563eb;
+}
+
+.fiber-material input:disabled {
+  background: #f1f5f9;
+  color: #64748b;
+  cursor: not-allowed;
+}
+
+.fiber-run-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 16px;
+}
+
+.fiber-run-actions button {
+  border: none;
+  border-radius: 8px;
+  padding: 10px 13px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.fiber-run-actions button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.fiber-run-actions .save-materials {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.fiber-run-actions .complete-run {
+  background: #2563eb;
+  color: white;
+}
+
+.fiber-run-actions .complete-run:hover {
+  background: #1d4ed8;
+}
+
+.fiber-run-actions .reopen-run {
+  background: #fff7ed;
+  color: #c2410c;
+}
+
+.fiber-run-actions .retry-run {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.fiber-run-actions button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+  .fiber-run-header {
+    flex-direction: column;
+  }
+
+  .fiber-run-status {
+    flex-direction: row;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .fiber-materials-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .fiber-run-actions {
+    flex-direction: column;
+  }
+
+  .fiber-run-actions button {
+    width: 100%;
+  }
+}
+
+/* =========================================
+   AVANCES DEL PROYECTO
+========================================= */
+
+#progress-section > h2 {
+  font-size: 21px;
+  color: #1e293b;
+  margin-bottom: 18px;
+}
+
+#progress-section .progress-summary {
+  gap: 18px;
+  margin: 20px 0 32px;
+}
+
+#progress-section .progress-summary .card {
+  border-radius: 14px;
+  padding: 24px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+#progress-section .progress-summary .card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.07);
+}
+
+#progress-section .progress-summary .card p {
+  font-size: 29px;
+  font-weight: 700;
+}
+
+/* Tarjetas individuales */
+
+#progress-container .progress-card {
+  padding: 22px;
+  border-radius: 14px;
+  border-top: 3px solid #2563eb;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+#progress-container .progress-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+}
+
+.progress-phase-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.progress-phase-header h3 {
+  color: #1e293b;
+  font-size: 17px;
+}
+
+.progress-phase-percentage {
+  color: #15803d;
+  background: #dcfce7;
+  padding: 7px 10px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.progress-phase-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.progress-phase-summary span,
+.progress-phase-footer span {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.progress-phase-summary strong {
+  color: #334155;
+  font-size: 13px;
+}
+
+#progress-container .progress-bar {
+  height: 10px;
+  margin-bottom: 20px;
+}
+
+.progress-phase-footer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 15px;
+}
+
+.progress-phase-footer div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.progress-phase-footer strong {
+  color: #1e293b;
+  font-size: 15px;
+}
+
+@media (max-width: 600px) {
+  .progress-phase-header {
+    align-items: flex-start;
+  }
+
+  #progress-container .progress-card {
+    padding: 17px;
+  }
+}
+
+
+/* Avance de grupos de NAP organizados por fase */
+
+.progress-group-section {
+  margin-bottom: 28px;
+}
+
+.progress-group-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #dce3ec;
+}
+
+.progress-group-section-header h3 {
+  margin: 0;
+  color: #263b59;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.progress-group-section-header span {
+  color: #718096;
+  font-size: 0.85rem;
+}
+
+.progress-group-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.progress-group-grid .progress-card {
+  margin: 0;
+  min-width: 0;
+}
+
+@media (max-width: 900px) {
+  .progress-group-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .progress-group-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Contenedor principal de grupos de NAP */
+#progress-container {
+  display: block;
+  width: 100%;
+}
+
+/* Cada fase ocupa todo el ancho disponible */
+.progress-group-section {
+  display: block;
+  width: 100%;
+  margin-bottom: 28px;
+}
+
+/* Tres tarjetas por cada fase */
+.progress-group-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  width: 100%;
+}
+
+
+/* Distribución horizontal del panel de avances */
+
+.progress-dashboard-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: 24px;
+  align-items: start;
+  margin-top: 24px;
+}
+
+.progress-dashboard-column {
+  min-width: 0;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.progress-dashboard-column > h2 {
+  font-size: 19px;
+  color: #263b59;
+  margin: 0 0 20px;
+}
+
+/* Seis fases: dos columnas */
+
+#construction-phase-progress-container {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+#construction-phase-progress-container .progress-card {
+  min-width: 0;
+  padding: 16px;
+}
+
+#construction-phase-progress-container .progress-phase-header {
+  margin-bottom: 14px;
+}
+
+/* Tres grupos de NAP por cada fase */
+
+#progress-container {
+  display: block;
+  width: 100%;
+  margin-top: 0;
+}
+
+.progress-group-section {
+  margin-bottom: 20px;
+}
+
+.progress-group-section-header {
+  margin-bottom: 12px;
+}
+
+.progress-group-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+#progress-container .progress-card {
+  padding: 13px;
+}
+
+#progress-container .progress-phase-header {
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+#progress-container .progress-phase-footer {
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+/* Adaptación para tabletas y móviles */
+
+@media (max-width: 1100px) {
+  .progress-dashboard-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  #construction-phase-progress-container {
+    grid-template-columns: 1fr;
+  }
+
+  .progress-dashboard-column {
+    padding: 14px;
+  }
+
+  .progress-group-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+
+/* Compactar las tarjetas de avance de construcción */
+
+#construction-phase-progress-container {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+#construction-phase-progress-container .progress-card {
+  padding: 17px;
+  min-height: 145px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+#construction-phase-progress-container .progress-phase-header {
+  margin-bottom: 12px;
+}
+
+#construction-phase-progress-container .progress-phase-header h3 {
+  margin-bottom: 0;
+  font-size: 16px;
+}
+
+#construction-phase-progress-container .progress-phase-summary {
+  margin-bottom: 8px;
+}
+
+#construction-phase-progress-container .progress-bar {
+  margin-bottom: 0;
+}
+
+@media (max-width: 600px) {
+  #construction-phase-progress-container {
+    grid-template-columns: 1fr;
+  }
+}

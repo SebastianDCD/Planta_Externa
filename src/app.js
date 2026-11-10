@@ -89,11 +89,11 @@ app.get("/api/phases", (req, res) => {
   }
 
   const phases = db.prepare(`
-    SELECT id, name, status
-    FROM phases
-    WHERE project_id = ?
-    ORDER BY id
-  `).all(projectId);
+      SELECT id, name, display_code, status
+      FROM phases
+      WHERE project_id = ?
+      ORDER BY id
+    `).all(projectId);
 
   const getNaps = db.prepare(`
   SELECT
