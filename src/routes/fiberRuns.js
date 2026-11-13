@@ -4,7 +4,8 @@ const db = require("../database");
 
 const {
   sendFiberRunToN8n,
-  sendNapDistributionToN8n
+  sendNapDistributionToN8n,
+  calculateNapFlejeAllocation
 } = require("../services/N8nService");
 
 const { randomUUID } = require("crypto");
@@ -564,7 +565,7 @@ router.get("/construction-phases/:phaseId/naps", (req, res) => {
     FROM construction_phase_groups cpg
     JOIN phases p ON p.id = cpg.phase_id
     WHERE cpg.construction_phase_id = ?
-    ORDER BY p.display_code
+    ORDER BY cpg.sort_order ASC
   `).all(phaseId);
 
   const getNaps = db.prepare(`
@@ -578,6 +579,7 @@ router.get("/construction-phases/:phaseId/naps", (req, res) => {
       ndr.n8n_sending,
       ndr.n8n_sent_at,
       ndr.n8n_last_error,
+      ndr.n8n_needs_update,
       ndr.completed_at AS distribution_completed_at
     FROM naps n
     JOIN nap_distribution_reports ndr ON ndr.nap_id = n.id
@@ -602,6 +604,7 @@ router.get("/construction-phases/:phaseId/naps", (req, res) => {
   const data = groups.map(group => {
     const naps = getNaps.all(group.id).map(nap => ({
       ...nap,
+      fleje_allocation: calculateNapFlejeAllocation(nap.id),
       materials: getMaterials.all(nap.id)
     }));
 
@@ -619,7 +622,7 @@ router.get("/construction-phases/:phaseId/naps", (req, res) => {
 });
 
 
-// Guardar cantidad real de un material de distribución
+// Guardar cantidades. Las NAP permanecen editables incluso después de enviar reportes.
 router.patch(
   "/naps/:napId/distribution-materials/:materialId",
   (req, res) => {
@@ -627,24 +630,13 @@ router.patch(
     const materialId = Number(req.params.materialId);
     const { actual_quantity } = req.body;
 
-    if (
-      !Number.isInteger(napId) || napId <= 0 ||
-      !Number.isInteger(materialId) || materialId <= 0
-    ) {
-      return res.status(400).json({
-        success: false,
-        message: "Identificadores inválidos."
-      });
+    if (!Number.isInteger(napId) || napId <= 0 ||
+        !Number.isInteger(materialId) || materialId <= 0) {
+      return res.status(400).json({ success: false, message: "Identificadores inválidos." });
     }
 
-    if (
-      actual_quantity !== null &&
-      (
-        typeof actual_quantity !== "number" ||
-        !Number.isFinite(actual_quantity) ||
-        actual_quantity < 0
-      )
-    ) {
+    if (actual_quantity !== null &&
+        (typeof actual_quantity !== "number" || !Number.isFinite(actual_quantity) || actual_quantity < 0)) {
       return res.status(400).json({
         success: false,
         message: "La cantidad debe ser un número válido igual o mayor a cero, o estar vacía."
@@ -652,146 +644,141 @@ router.patch(
     }
 
     const material = db.prepare(`
-      SELECT
-        dm.id,
-        ndr.completed_at
+      SELECT dm.id, dm.actual_quantity, c.name, c.unit, r.n8n_sending
       FROM nap_distribution_materials dm
-      JOIN nap_distribution_reports ndr
-        ON ndr.nap_id = dm.nap_id
+      JOIN nap_distribution_material_catalog c ON c.id = dm.catalog_id
+      JOIN nap_distribution_reports r ON r.nap_id = dm.nap_id
       WHERE dm.id = ? AND dm.nap_id = ?
     `).get(materialId, napId);
 
-    if (!material) {
-      return res.status(404).json({
+    if (!material) return res.status(404).json({ success: false, message: "No se encontró el material." });
+    if (material.n8n_sending === 1) {
+      return res.status(409).json({ success: false, message: "Hay un reporte enviándose. Intenta modificarlo nuevamente cuando termine." });
+    }
+    if (material.name === 'Fleje') {
+      const sendingReports = db.prepare(`
+        SELECT COUNT(*) AS total
+        FROM nap_distribution_reports
+        WHERE n8n_sending = 1
+      `).get().total;
+      if (sendingReports > 0) {
+        return res.status(409).json({
+          success: false,
+          message: "Hay un reporte de NAP enviándose. Espera a que termine antes de modificar el acumulado global de Fleje."
+        });
+      }
+    }
+    if (
+      actual_quantity !== null &&
+      material.unit === 'pza' &&
+      !Number.isInteger(actual_quantity)
+    ) {
+      return res.status(400).json({
         success: false,
-        message: "No se encontró el material."
+        message: `${material.name} solo acepta piezas enteras.`
       });
     }
 
-    if (material.completed_at) {
-      return res.status(409).json({
-        success: false,
-        message: "La distribución está completada. Debes reabrir la NAP para modificar materiales."
-      });
-    }
+    const previousQuantity = material.actual_quantity;
+    const changed = previousQuantity !== actual_quantity;
 
-    db.prepare(`
-      UPDATE nap_distribution_materials
-      SET actual_quantity = ?,
-          updated_at = CURRENT_TIMESTAMP
-      WHERE id = ?
-    `).run(actual_quantity, materialId);
+    const update = db.transaction(() => {
+      db.prepare(`
+        UPDATE nap_distribution_materials
+        SET actual_quantity = ?, updated_at = CURRENT_TIMESTAMP
+        WHERE id = ?
+      `).run(actual_quantity, materialId);
+
+      if (changed) {
+        if (material.name === 'Fleje') {
+          // Una modificación de Fleje puede alterar la asignación de todas las NAP posteriores.
+          db.prepare(`
+            UPDATE nap_distribution_reports
+            SET n8n_needs_update = CASE WHEN n8n_status = 'SENT' THEN 1 ELSE n8n_needs_update END,
+                n8n_status = CASE WHEN n8n_status = 'SENT' THEN 'PENDING' ELSE n8n_status END,
+                updated_at = CURRENT_TIMESTAMP
+            WHERE n8n_sending = 0
+          `).run();
+        } else {
+          db.prepare(`
+            UPDATE nap_distribution_reports
+            SET n8n_needs_update = CASE WHEN n8n_status = 'SENT' THEN 1 ELSE n8n_needs_update END,
+                n8n_status = CASE WHEN n8n_status = 'SENT' THEN 'PENDING' ELSE n8n_status END,
+                updated_at = CURRENT_TIMESTAMP
+            WHERE nap_id = ? AND n8n_sending = 0
+          `).run(napId);
+        }
+      }
+    });
+    update();
 
     res.json({
       success: true,
-      message: "Cantidad actualizada correctamente.",
-      data: { actual_quantity }
+      message: changed ? "Cantidad actualizada. Los reportes afectados quedaron pendientes de actualización." : "La cantidad no tuvo cambios.",
+      data: { previous_quantity: previousQuantity, actual_quantity }
     });
   }
 );
 
 
-// Completar distribución de una NAP y enviar su reporte individual
+// Enviar o actualizar el reporte individual de una NAP. No existe estado de terminada.
 router.patch("/naps/:napId/distribution/complete", async (req, res) => {
   const napId = Number(req.params.napId);
-
   if (!Number.isInteger(napId) || napId <= 0) {
-    return res.status(400).json({
+    return res.status(400).json({ success: false, message: "ID de NAP inválido." });
+  }
+
+  const lock = db.prepare(`
+    UPDATE nap_distribution_reports
+    SET report_id = COALESCE(report_id, ?),
+        n8n_sending = 1,
+        n8n_last_error = NULL,
+        updated_at = CURRENT_TIMESTAMP
+    WHERE nap_id = ? AND n8n_sending = 0
+  `).run(randomUUID(), napId);
+
+  if (lock.changes !== 1) {
+    const report = db.prepare(`SELECT nap_id, n8n_sending FROM nap_distribution_reports WHERE nap_id = ?`).get(napId);
+    return res.status(report ? 409 : 404).json({
       success: false,
-      message: "ID de NAP inválido."
+      message: report ? "Ya existe un envío en curso." : "No se encontró la NAP."
     });
   }
 
+  const report = db.prepare(`SELECT report_id FROM nap_distribution_reports WHERE nap_id = ?`).get(napId);
   try {
-    const result = db.transaction(() => {
-      const report = db.prepare(`
-        SELECT *
-        FROM nap_distribution_reports
-        WHERE nap_id = ?
-      `).get(napId);
+    const n8nResult = await sendNapDistributionToN8n(napId);
+    db.prepare(`
+      UPDATE nap_distribution_reports
+      SET n8n_sending = 0,
+          n8n_status = 'SENT',
+          n8n_needs_update = 0,
+          n8n_sent_at = CURRENT_TIMESTAMP,
+          completed_at = CURRENT_TIMESTAMP,
+          n8n_last_error = NULL,
+          updated_at = CURRENT_TIMESTAMP
+      WHERE nap_id = ? AND report_id = ?
+    `).run(napId, report.report_id);
 
-      if (!report) throw new Error("NOT_FOUND");
-      if (report.completed_at) throw new Error("ALREADY_COMPLETED");
-      if (report.n8n_sending === 1) throw new Error("SENDING");
-
-      const reportId = randomUUID();
-
-      db.prepare(`
-        UPDATE nap_distribution_reports
-        SET completed_at = CURRENT_TIMESTAMP,
-            report_id = ?,
-            n8n_status = 'PENDING',
-            n8n_sending = 1,
-            n8n_sent_at = NULL,
-            n8n_last_error = NULL,
-            updated_at = CURRENT_TIMESTAMP
-        WHERE nap_id = ?
-      `).run(reportId, napId);
-
-      return { reportId };
-    })();
-
-    try {
-      const n8nResult = await sendNapDistributionToN8n(napId);
-
-      db.prepare(`
-        UPDATE nap_distribution_reports
-        SET n8n_sending = 0,
-            n8n_status = 'SENT',
-            n8n_sent_at = CURRENT_TIMESTAMP,
-            n8n_last_error = NULL,
-            updated_at = CURRENT_TIMESTAMP
-        WHERE nap_id = ? AND report_id = ?
-      `).run(napId, result.reportId);
-
-      return res.json({
-        success: true,
-        message: "Distribución completada y enviada a n8n.",
-        report_id: result.reportId,
-        n8n: {
-          sent: true,
-          message: n8nResult.message || "JSON recibido por n8n."
-        }
-      });
-
-    } catch (n8nError) {
-      db.prepare(`
-        UPDATE nap_distribution_reports
-        SET n8n_sending = 0,
-            n8n_status = 'ERROR',
-            n8n_last_error = ?,
-            updated_at = CURRENT_TIMESTAMP
-        WHERE nap_id = ? AND report_id = ?
-      `).run(n8nError.message, napId, result.reportId);
-
-      return res.json({
-        success: true,
-        message: "Distribución completada, pero falló el envío a n8n.",
-        report_id: result.reportId,
-        n8n: {
-          sent: false,
-          error: n8nError.message
-        }
-      });
-    }
-
+    return res.json({
+      success: true,
+      message: "Reporte individual enviado correctamente.",
+      report_id: report.report_id,
+      n8n: { sent: true, message: n8nResult.message || "JSON recibido por n8n." }
+    });
   } catch (error) {
-    const errors = {
-      NOT_FOUND: [404, "No se encontró el control de distribución de la NAP."],
-      ALREADY_COMPLETED: [409, "La distribución de esta NAP ya está completada."],
-      SENDING: [409, "Ya existe un envío en curso."]
-    };
+    db.prepare(`
+      UPDATE nap_distribution_reports
+      SET n8n_sending = 0, n8n_status = 'ERROR', n8n_needs_update = 1,
+          n8n_last_error = ?, updated_at = CURRENT_TIMESTAMP
+      WHERE nap_id = ? AND report_id = ?
+    `).run(error.message, napId, report.report_id);
 
-    if (errors[error.message]) {
-      const [status, message] = errors[error.message];
-      return res.status(status).json({ success: false, message });
-    }
-
-    console.error("Error al completar distribución NAP:", error);
-
-    return res.status(500).json({
+    return res.status(502).json({
       success: false,
-      message: "Error al completar la distribución."
+      message: "No se pudo enviar el reporte a n8n.",
+      report_id: report.report_id,
+      error: error.message
     });
   }
 });
@@ -860,117 +847,6 @@ router.patch("/naps/:napId/distribution/reopen", (req, res) => {
   }
 });
 
-
-// Reintentar envío de distribución NAP a n8n
-router.post("/naps/:napId/distribution/retry", async (req, res) => {
-  const napId = Number(req.params.napId);
-
-  if (!Number.isInteger(napId) || napId <= 0) {
-    return res.status(400).json({
-      success: false,
-      message: "ID de NAP inválido."
-    });
-  }
-
-  const report = db.prepare(`
-    SELECT *
-    FROM nap_distribution_reports
-    WHERE nap_id = ?
-  `).get(napId);
-
-  if (!report) {
-    return res.status(404).json({
-      success: false,
-      message: "No se encontró la NAP."
-    });
-  }
-
-  if (!report.completed_at) {
-    return res.status(409).json({
-      success: false,
-      message: "La distribución no está completada."
-    });
-  }
-
-  if (report.n8n_status === "SENT") {
-    return res.status(409).json({
-      success: false,
-      message: "Este reporte ya fue enviado."
-    });
-  }
-
-  if (report.n8n_sending === 1) {
-    return res.status(409).json({
-      success: false,
-      message: "Ya existe un envío en curso."
-    });
-  }
-
-  if (!report.report_id) {
-    return res.status(409).json({
-      success: false,
-      message: "La NAP no tiene identificador de reporte."
-    });
-  }
-
-  const lock = db.prepare(`
-    UPDATE nap_distribution_reports
-    SET n8n_sending = 1,
-        updated_at = CURRENT_TIMESTAMP
-    WHERE nap_id = ?
-      AND n8n_sending = 0
-      AND n8n_status != 'SENT'
-      AND report_id = ?
-  `).run(napId, report.report_id);
-
-  if (lock.changes !== 1) {
-    return res.status(409).json({
-      success: false,
-      message: "No fue posible reservar el envío. Intenta nuevamente."
-    });
-  }
-
-  try {
-    const n8nResult = await sendNapDistributionToN8n(napId);
-
-    db.prepare(`
-      UPDATE nap_distribution_reports
-      SET n8n_sending = 0,
-          n8n_status = 'SENT',
-          n8n_sent_at = CURRENT_TIMESTAMP,
-          n8n_last_error = NULL,
-          updated_at = CURRENT_TIMESTAMP
-      WHERE nap_id = ? AND report_id = ?
-    `).run(napId, report.report_id);
-
-    return res.json({
-      success: true,
-      message: "Reporte enviado correctamente.",
-      report_id: report.report_id,
-      n8n: {
-        sent: true,
-        message: n8nResult.message || "JSON recibido por n8n."
-      }
-    });
-
-  } catch (n8nError) {
-    db.prepare(`
-      UPDATE nap_distribution_reports
-      SET n8n_sending = 0,
-          n8n_status = 'ERROR',
-          n8n_last_error = ?,
-          updated_at = CURRENT_TIMESTAMP
-      WHERE nap_id = ? AND report_id = ?
-    `).run(n8nError.message, napId, report.report_id);
-
-    return res.status(502).json({
-      success: false,
-      message: "No se pudo enviar el reporte a n8n.",
-      report_id: report.report_id,
-      error: n8nError.message
-    });
-  }
-});
 
 
 module.exports = router;

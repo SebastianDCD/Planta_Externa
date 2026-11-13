@@ -1179,340 +1179,145 @@ async function loadNapDistribution(phaseId) {
     napDistributionContainer.innerHTML = "<p>Cargando distribución...</p>";
 
     const response = await fetch(`/api/construction-phases/${phaseId}/naps`);
-
     const result = await response.json();
-
     if (!response.ok || !result.success) {
       throw new Error(result.message || "No se pudo cargar la distribución.");
     }
 
     napDistributionContainer.innerHTML = `
       <h2>${result.phase.name} | Distribución de NAP</h2>
+      <p class="distribution-help">Fleje se captura en metros y se convierte automáticamente en piezas por cada 30 m acumulados en UACH. El orden de cálculo es 1N01 a 1N09 y NAP 01 a 08. Acero se captura en piezas enteras.</p>
     `;
 
     result.data.forEach((group) => {
       const groupCard = document.createElement("section");
       groupCard.className = "card nap-distribution-group";
-
-      const completed = group.naps.filter(
-        (nap) => nap.distribution_completed_at,
-      ).length;
-
       groupCard.innerHTML = `
         <div class="distribution-group-header">
           <div>
             <span class="distribution-group-code">${group.display_code}</span>
             <h3>${group.name}</h3>
           </div>
-
-          <span class="distribution-group-count">
-            ${completed} de ${group.naps.length} NAP completadas
-          </span>
+          <span class="distribution-group-count">${group.naps.length} NAP</span>
         </div>
-
         <div class="nap-distribution-list"></div>
       `;
 
-      const napsContainer = groupCard.querySelector(".nap-distribution-list");
-
+      const list = groupCard.querySelector(".nap-distribution-list");
       group.naps.forEach((nap) => {
-        const napCard = document.createElement("article");
-        napCard.className = "card nap-distribution-card";
-
-        const isCompleted = Boolean(nap.distribution_completed_at);
-
-        const n8nStatus =
-          nap.n8n_sending === 1
-            ? "ENVIANDO"
+        const card = document.createElement("article");
+        card.className = "card nap-distribution-card";
+        const n8nStatus = nap.n8n_sending === 1
+          ? "ENVIANDO"
+          : nap.n8n_needs_update
+            ? "ACTUALIZAR"
             : nap.n8n_status === "SENT"
               ? "ENVIADO"
-              : nap.n8n_status === "ERROR"
-                ? "ERROR"
-                : "PENDIENTE";
+            : nap.n8n_status === "ERROR" ? "ERROR" : "PENDIENTE";
 
-        napCard.innerHTML = `
+        card.innerHTML = `
           <div class="nap-distribution-header">
             <div>
               <h4>NAP ${String(nap.number).padStart(2, "0")}</h4>
               <span class="nap-distribution-meters">
-                Metraje: ${nap.meters === null ? "Pendiente" : `${nap.meters} m`}
+                Metraje: ${nap.meters === null ? "Pendiente" : `${nap.meters} m`} · Fleje asignado: ${nap.fleje_allocation?.pieces ?? 0} pza
               </span>
             </div>
-
             <div class="nap-distribution-status">
-              <span class="distribution-badge ${isCompleted ? "completed" : "in-progress"}">
-                ${isCompleted ? "COMPLETADA" : "EN PROCESO"}
-              </span>
-
-              <span class="distribution-badge ${
-                nap.n8n_sending === 1
-                  ? "sending"
-                  : nap.n8n_status === "SENT"
-                    ? "sent"
-                    : nap.n8n_status === "ERROR"
-                      ? "error"
-                      : "pending"
-              }">
-                n8n: ${n8nStatus}
-              </span>
+              <span class="distribution-badge in-progress">EDITABLE</span>
+              <span class="distribution-badge ${nap.n8n_sending === 1 ? "sending" : nap.n8n_status === "SENT" && !nap.n8n_needs_update ? "sent" : nap.n8n_status === "ERROR" ? "error" : "pending"}">n8n: ${n8nStatus}</span>
             </div>
           </div>
-
-          ${
-            nap.n8n_last_error
-              ? `<p class="error-message">Error: ${nap.n8n_last_error}</p>`
-              : ""
-          }
-
+          ${nap.n8n_last_error ? `<p class="error-message">Error: ${nap.n8n_last_error}</p>` : ""}
           <div class="nap-distribution-materials">
             <h5>Materiales utilizados</h5>
-
             <div class="distribution-materials-grid">
-              ${nap.materials
-                .map(
-                  (material) => `
+              ${nap.materials.map((material) => `
                 <label class="distribution-material">
                   <span>${material.name}</span>
-                  <small>${material.unit}</small>
-
+                  <small>${material.name === "Fleje" ? "m capturados" : material.name === "Acero" ? "pza" : material.unit}</small>
                   <input
                     type="number"
                     min="0"
-                    step="any"
+                    step="${material.unit === "pza" ? "1" : "any"}"
                     value="${material.actual_quantity ?? ""}"
                     data-material-id="${material.id}"
-                    ${isCompleted ? "disabled" : ""}
+                    data-material-name="${material.name}"
+                    data-material-unit="${material.unit}"
                   >
                 </label>
-              `,
-                )
-                .join("")}
+              `).join("")}
             </div>
           </div>
-
           <div class="nap-distribution-actions">
-            <button class="save-nap-distribution"
-              ${isCompleted ? "disabled" : ""}>
-              Guardar cantidades
+            <button class="save-nap-distribution">Guardar cantidades</button>
+            <button class="complete-nap-distribution" ${nap.n8n_sending === 1 ? "disabled" : ""}>
+              ${nap.n8n_status === "SENT" && !nap.n8n_needs_update ? "Enviar nuevamente" : nap.n8n_needs_update ? "Actualizar reporte en n8n" : nap.n8n_status === "ERROR" ? "Reintentar envío" : "Enviar reporte a n8n"}
             </button>
-
-            ${
-              isCompleted
-                ? `
-                  <button class="reopen-nap-distribution">
-                    Reabrir distribución
-                  </button>
-
-                  ${
-                    nap.n8n_status === "ERROR" && nap.n8n_sending !== 1
-                      ? '<button class="retry-nap-distribution">Reintentar envío a n8n</button>'
-                      : ""
-                  }
-                `
-                : `
-                  <button class="complete-nap-distribution">
-                    Completar y enviar a n8n
-                  </button>
-                `
-            }
           </div>
         `;
+        list.appendChild(card);
 
-        napsContainer.appendChild(napCard);
-
-        // Guardar cantidades
-        napCard
-          .querySelector(".save-nap-distribution")
-          .addEventListener("click", async () => {
-            const button = napCard.querySelector(".save-nap-distribution");
-
-            try {
-              button.disabled = true;
-              button.textContent = "Guardando...";
-
-              const inputs = napCard.querySelectorAll("[data-material-id]");
-
-              for (const input of inputs) {
-                const rawValue = input.value.trim();
-
-                const actualQuantity =
-                  rawValue === "" ? null : Number(rawValue);
-
-                if (
-                  actualQuantity !== null &&
-                  (!Number.isFinite(actualQuantity) || actualQuantity < 0)
-                ) {
-                  throw new Error("Hay una cantidad inválida.");
-                }
-
-                const saveResponse = await fetch(
-                  `/api/naps/${nap.id}/distribution-materials/${input.dataset.materialId}`,
-                  {
-                    method: "PATCH",
-                    headers: {
-                      "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                      actual_quantity: actualQuantity,
-                    }),
-                  },
-                );
-
-                const saveResult = await saveResponse.json();
-
-                if (!saveResponse.ok) {
-                  throw new Error(saveResult.message);
-                }
-              }
-
-              alert(`Cantidades de NAP ${nap.number} guardadas.`);
-              await loadNapDistribution(phaseId);
-            } catch (error) {
-              alert(error.message);
-              button.disabled = false;
-              button.textContent = "Guardar cantidades";
+        async function saveNapMaterials() {
+          const inputs = card.querySelectorAll("[data-material-id]");
+          for (const input of inputs) {
+            const raw = input.value.trim();
+            const value = raw === "" ? null : Number(raw);
+            if (value !== null && (!Number.isFinite(value) || value < 0)) {
+              throw new Error(`Cantidad inválida en ${input.dataset.materialName}.`);
             }
-          });
-
-        // Completar y enviar
-        const completeButton = napCard.querySelector(
-          ".complete-nap-distribution",
-        );
-
-        if (completeButton) {
-          completeButton.addEventListener("click", async () => {
             if (
-              !confirm(
-                `¿Completar la distribución de NAP ${nap.number} y enviar su reporte a n8n?`,
-              )
-            )
-              return;
-
-            try {
-              completeButton.disabled = true;
-              completeButton.textContent = "Procesando...";
-
-              const inputs = napCard.querySelectorAll("[data-material-id]");
-
-              for (const input of inputs) {
-                const rawValue = input.value.trim();
-
-                const actualQuantity =
-                  rawValue === "" ? null : Number(rawValue);
-
-                if (
-                  actualQuantity !== null &&
-                  (!Number.isFinite(actualQuantity) || actualQuantity < 0)
-                ) {
-                  throw new Error("Hay una cantidad inválida.");
-                }
-
-                const saveResponse = await fetch(
-                  `/api/naps/${nap.id}/distribution-materials/${input.dataset.materialId}`,
-                  {
-                    method: "PATCH",
-                    headers: {
-                      "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                      actual_quantity: actualQuantity,
-                    }),
-                  },
-                );
-
-                const saveResult = await saveResponse.json();
-
-                if (!saveResponse.ok) {
-                  throw new Error(saveResult.message);
-                }
-              }
-
-              const response = await fetch(
-                `/api/naps/${nap.id}/distribution/complete`,
-                { method: "PATCH" },
-              );
-
-              const result = await response.json();
-
-              if (!response.ok) {
-                throw new Error(result.message);
-              }
-
-              alert(
-                result.n8n?.sent
-                  ? "Distribución completada. Reporte enviado a n8n."
-                  : `Distribución completada, pero falló el envío: ${result.n8n?.error || "Error desconocido"}`,
-              );
-
-              await loadNapDistribution(phaseId);
-            } catch (error) {
-              alert(error.message);
-              await loadNapDistribution(phaseId);
+              value !== null &&
+              input.dataset.materialUnit === "pza" &&
+              !Number.isInteger(value)
+            ) {
+              throw new Error(`${input.dataset.materialName} solo acepta piezas enteras.`);
             }
-          });
+            const saveResponse = await fetch(
+              `/api/naps/${nap.id}/distribution-materials/${input.dataset.materialId}`,
+              {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ actual_quantity: value })
+              }
+            );
+            const saveResult = await saveResponse.json();
+            if (!saveResponse.ok) throw new Error(saveResult.message);
+          }
         }
 
-        // Reabrir distribución
-        const reopenButton = napCard.querySelector(".reopen-nap-distribution");
+        card.querySelector(".save-nap-distribution").addEventListener("click", async (event) => {
+          const button = event.currentTarget;
+          try {
+            button.disabled = true;
+            button.textContent = "Guardando...";
+            await saveNapMaterials();
+            alert(`Cantidades de NAP ${nap.number} guardadas.`);
+            await loadNapDistribution(phaseId);
+          } catch (error) {
+            alert(error.message);
+            button.disabled = false;
+            button.textContent = "Guardar cantidades";
+          }
+        });
 
-        if (reopenButton) {
-          reopenButton.addEventListener("click", async () => {
-            if (!confirm(`¿Reabrir la distribución de NAP ${nap.number}?`)) {
-              return;
-            }
-
-            try {
-              const response = await fetch(
-                `/api/naps/${nap.id}/distribution/reopen`,
-                { method: "PATCH" },
-              );
-
-              const result = await response.json();
-
-              if (!response.ok) {
-                throw new Error(result.message);
-              }
-
-              alert("Distribución reabierta.");
-              await loadNapDistribution(phaseId);
-            } catch (error) {
-              alert(error.message);
-            }
-          });
-        }
-
-        // Reintentar envío
-        const retryButton = napCard.querySelector(".retry-nap-distribution");
-
-        if (retryButton) {
-          retryButton.addEventListener("click", async () => {
-            if (!confirm(`¿Reintentar el envío de NAP ${nap.number} a n8n?`)) {
-              return;
-            }
-
-            try {
-              retryButton.disabled = true;
-              retryButton.textContent = "Enviando...";
-
-              const response = await fetch(
-                `/api/naps/${nap.id}/distribution/retry`,
-                { method: "POST" },
-              );
-
-              const result = await response.json();
-
-              if (!response.ok) {
-                throw new Error(result.message);
-              }
-
-              alert("Reporte enviado correctamente a n8n.");
-              await loadNapDistribution(phaseId);
-            } catch (error) {
-              alert(error.message);
-              await loadNapDistribution(phaseId);
-            }
-          });
-        }
+        card.querySelector(".complete-nap-distribution").addEventListener("click", async (event) => {
+          const button = event.currentTarget;
+          if (!confirm(`¿Enviar o actualizar el reporte individual de NAP ${nap.number} en n8n?`)) return;
+          try {
+            button.disabled = true;
+            button.textContent = "Enviando...";
+            await saveNapMaterials();
+            const sendResponse = await fetch(`/api/naps/${nap.id}/distribution/complete`, { method: "PATCH" });
+            const sendResult = await sendResponse.json();
+            if (!sendResponse.ok) throw new Error(sendResult.message || sendResult.error);
+            alert(sendResult.n8n?.sent ? "Reporte individual enviado/actualizado correctamente." : `No se pudo enviar: ${sendResult.n8n?.error || "Error desconocido"}`);
+            await loadNapDistribution(phaseId);
+          } catch (error) {
+            alert(error.message);
+            await loadNapDistribution(phaseId);
+          }
+        });
       });
 
       napDistributionContainer.appendChild(groupCard);

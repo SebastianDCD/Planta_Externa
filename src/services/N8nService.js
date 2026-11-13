@@ -293,97 +293,159 @@ async function sendFiberRunToN8n(runId) {
 // REPORTE INDIVIDUAL DE DISTRIBUCIÓN NAP
 // ======================================================
 
+function calculateNapFlejeAllocation(napId) {
+  const target = db.prepare(`
+    SELECT p.project_id
+    FROM naps n
+    JOIN phases p ON p.id = n.phase_id
+    WHERE n.id = ?
+  `).get(napId);
+
+  if (!target) throw new Error("No se encontró la NAP para calcular Fleje.");
+
+  const orderedNaps = db.prepare(`
+    SELECT
+      n.id,
+      n.number,
+      p.display_code,
+      COALESCE(dm.actual_quantity, 0) AS fleje_meters
+    FROM naps n
+    JOIN phases p ON p.id = n.phase_id
+    LEFT JOIN nap_distribution_materials dm
+      ON dm.nap_id = n.id
+    LEFT JOIN nap_distribution_material_catalog c
+      ON c.id = dm.catalog_id AND c.name = 'Fleje'
+    WHERE p.project_id = ?
+      AND c.name = 'Fleje'
+    ORDER BY p.display_code COLLATE NOCASE, n.number, n.id
+  `).all(target.project_id);
+
+  let accumulatedBefore = 0;
+  let allocation = null;
+
+  for (const nap of orderedNaps) {
+    const meters = Number(nap.fleje_meters) || 0;
+    const accumulatedAfter = accumulatedBefore + meters;
+    const pieces = Math.floor((accumulatedAfter + 1e-9) / 30)
+      - Math.floor((accumulatedBefore + 1e-9) / 30);
+
+    if (nap.id === napId) {
+      allocation = {
+        meters,
+        pieces,
+        accumulated_before_meters: accumulatedBefore,
+        accumulated_after_meters: accumulatedAfter,
+        project_total_meters: orderedNaps.reduce(
+          (sum, item) => sum + (Number(item.fleje_meters) || 0), 0
+        )
+      };
+      break;
+    }
+
+    accumulatedBefore = accumulatedAfter;
+  }
+
+  if (!allocation) throw new Error("No se encontró la NAP dentro del orden de Fleje UACH.");
+
+  allocation.project_total_pieces = Math.floor(
+    (allocation.project_total_meters + 1e-9) / 30
+  );
+  allocation.project_remainder_meters = Number(
+    (allocation.project_total_meters % 30).toFixed(4)
+  );
+
+  return allocation;
+}
+
 function buildNapDistributionPayload(napId) {
   const nap = db.prepare(`
     SELECT
       n.id AS nap_id,
       n.number AS nap_number,
-      n.construction_status,
       ndr.report_id,
-      ndr.completed_at,
-
-      p.id AS project_id,
-      p.name AS project_name,
-
-      ph.id AS first_level_id,
-      ph.name AS first_level_name,
-      ph.display_code,
-
-      cp.id AS construction_phase_id,
-      cp.number AS construction_phase_number,
-      cp.name AS construction_phase_name
-
+      ph.display_code
     FROM naps n
     JOIN phases ph ON ph.id = n.phase_id
-    JOIN projects p ON p.id = ph.project_id
-
-    JOIN construction_phase_groups cpg
-      ON cpg.phase_id = ph.id
-
-    JOIN construction_phases cp
-      ON cp.id = cpg.construction_phase_id
-
-    JOIN nap_distribution_reports ndr
-      ON ndr.nap_id = n.id
-
+    JOIN nap_distribution_reports ndr ON ndr.nap_id = n.id
     WHERE n.id = ?
   `).get(napId);
 
-  if (!nap) {
-    throw new Error("No se encontró la NAP de distribución.");
-  }
+  if (!nap) throw new Error("No se encontró la NAP de distribución.");
+  if (!nap.report_id) throw new Error("La NAP no tiene identificador de reporte.");
 
-  if (!nap.report_id) {
-    throw new Error("La NAP no tiene identificador de reporte.");
-  }
+  // Estos materiales se capturan localmente, pero no forman parte del JSON operativo.
+  const excludedMaterials = new Set([
+    'Postería total',
+    'Postes que se flejó'
+  ]);
+
+  const outputNames = {
+    'Drop': 'unifibra',
+    'Splitter': 'Splitter 1X8',
+    'Tensores': 'Tensor TotalPlay'
+  };
 
   const materials = db.prepare(`
-    SELECT
-      c.name,
-      dm.actual_quantity,
-      c.unit
+    SELECT c.name, dm.actual_quantity, c.unit
     FROM nap_distribution_materials dm
-    JOIN nap_distribution_material_catalog c
-      ON c.id = dm.catalog_id
+    JOIN nap_distribution_material_catalog c ON c.id = dm.catalog_id
     WHERE dm.nap_id = ?
-      AND dm.actual_quantity IS NOT NULL
+      AND dm.actual_quantity > 0
+      AND c.name NOT IN ('Fleje', 'Acero')
     ORDER BY c.id
   `).all(napId);
 
-  return {
-    source: "planta-externa",
-    event: "NAP_DISTRIBUTION_COMPLETED",
-    report_id: nap.report_id,
+  const fleje = db.prepare(`
+    SELECT dm.actual_quantity
+    FROM nap_distribution_materials dm
+    JOIN nap_distribution_material_catalog c ON c.id = dm.catalog_id
+    WHERE dm.nap_id = ? AND c.name = 'Fleje'
+  `).get(napId);
 
-    project: {
-      id: nap.project_id,
-      name: nap.project_name
-    },
+  const acero = db.prepare(`
+    SELECT dm.actual_quantity
+    FROM nap_distribution_materials dm
+    JOIN nap_distribution_material_catalog c ON c.id = dm.catalog_id
+    WHERE dm.nap_id = ? AND c.name = 'Acero'
+  `).get(napId);
 
-    construction_phase: {
-      id: nap.construction_phase_id,
-      number: nap.construction_phase_number,
-      name: nap.construction_phase_name
-    },
+  const flejeAllocation = calculateNapFlejeAllocation(napId);
 
-    first_level: {
-      id: nap.first_level_id,
-      name: nap.first_level_name,
-      display_code: nap.display_code
-    },
-
-    nap: {
-      id: nap.nap_id,
-      number: nap.nap_number,
-      construction_status: nap.construction_status,
-      completed_at: nap.completed_at
-    },
-
-    materials: materials.map(material => ({
-      name: material.name,
+  const reportMaterials = materials
+    .filter(material => !excludedMaterials.has(material.name))
+    .map(material => ({
+      name: outputNames[material.name] || material.name,
       actual_quantity: material.actual_quantity,
       unit: material.unit
-    }))
+    }));
+
+  // El Fleje se reporta únicamente cuando el acumulado asigna una o más piezas.
+  if (fleje && fleje.actual_quantity !== null && flejeAllocation.pieces > 0) {
+    reportMaterials.push({
+      name: 'Fleje',
+      actual_quantity: flejeAllocation.pieces,
+      unit: 'pza'
+    });
+  }
+
+  if (acero && acero.actual_quantity !== null && acero.actual_quantity > 0) {
+    reportMaterials.push({
+      name: 'Acero',
+      actual_quantity: acero.actual_quantity,
+      unit: 'pza'
+    });
+  }
+
+  return {
+    source: 'planta-externa',
+    event: 'NAP_DISTRIBUTION_COMPLETED',
+    report_id: nap.report_id,
+    group: nap.display_code,
+    nap: {
+      id: nap.nap_id,
+      number: nap.nap_number
+    },
+    materials: reportMaterials
   };
 }
 
@@ -405,5 +467,6 @@ module.exports = {
   buildFiberRunPayload,
   sendFiberRunToN8n,
   buildNapDistributionPayload,
+  calculateNapFlejeAllocation,
   sendNapDistributionToN8n
 };
