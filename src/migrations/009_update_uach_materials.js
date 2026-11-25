@@ -201,7 +201,7 @@ const migrate = db.transaction(() => {
   const materialMapping = {
     "Acero": "Acero",
     "Drop": "Unifibra mts",
-    "Fleje": "Fleje 5/8",
+    "Fleje": "Flejes 5/8",
     "Herrajes tipo D": "Herrajes Tipo D",
     "Splitter": "Splitter 1x8",
     "Tensores": "Tensores TotalPlay"

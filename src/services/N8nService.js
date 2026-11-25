@@ -160,7 +160,8 @@ async function postToN8n(payload) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "X-API-Key": process.env.N8N_WEBHOOK_SECRET
+      //"X-API-Key": process.env.N8N_WEBHOOK_SECRET
+      "FiberX-Key": process.env.N8N_WEBHOOK_SECRET
     },
     body: JSON.stringify(payload)
   });
