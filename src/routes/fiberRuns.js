@@ -12,6 +12,14 @@ const { randomUUID } = require("crypto");
 
 const router = express.Router();
 
+function normalizeMaterialNameForValidation(name) {
+  return String(name || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim()
+    .toLowerCase();
+}
+
 // Consultar las fases de construcción
 router.get("/construction-phases", (req, res) => {
   const projectId = Number(req.query.project_id);
@@ -149,6 +157,7 @@ router.patch(
         frm.id,
         frm.name,
         frm.actual_quantity,
+        frm.unit,
         fr.status
       FROM fiber_run_materials frm
       JOIN fiber_runs fr ON fr.id = frm.fiber_run_id
@@ -159,6 +168,16 @@ router.patch(
       return res.status(404).json({
         success: false,
         message: "No se encontró el material."
+      });
+    }
+
+    if (
+      normalizeMaterialNameForValidation(material.name).startsWith("acero") &&
+      !Number.isInteger(actual_quantity)
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Acero solo acepta piezas enteras."
       });
     }
 
@@ -670,7 +689,7 @@ router.patch(
     }
     if (
       actual_quantity !== null &&
-      material.unit === 'pza' &&
+      (material.unit === 'pza' || normalizeMaterialNameForValidation(material.name).startsWith("acero")) &&
       !Number.isInteger(actual_quantity)
     ) {
       return res.status(400).json({

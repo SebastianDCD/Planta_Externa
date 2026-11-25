@@ -35,19 +35,25 @@
       <main class="main-content">
         <header class="topbar">
           <h1>Panel principal</h1>
-          <span>MONITOREO PLANTA EXTERNA</span>
+          <div class="project-context">
+            <label for="active-project-select">Proyecto</label>
+            <select id="active-project-select" aria-label="Seleccionar proyecto">
+              <option value="">Cargando proyectos...</option>
+            </select>
+            <span>MONITOREO PLANTA EXTERNA</span>
+          </div>
         </header>
 
         <section id="dashboard-section" class="dashboard-cards">
           <article class="card project-card">
             <span>PROYECTO ACTIVO</span>
-            <h2>UACH</h2>
+            <h2 id="active-project-name">Cargando...</h2>
             <p>Control de construcción de planta externa</p>
           </article>
 
           <article class="card">
             <h3>Fases del proyecto</h3>
-            <p>09</p>
+            <p id="dashboard-phase-total">0</p>
           </article>
 
           <article class="card">
@@ -62,17 +68,17 @@
 
           <article class="card">
             <h3>NAP terminadas</h3>
-            <p id="completed-naps">0 / 72</p>
+            <p id="completed-naps">0 / 0</p>
           </article>
 
           <article class="card">
             <h3>Fases con avance</h3>
-            <p id="completed-phases">0 / 9</p>
+            <p id="completed-phases">0 / 0</p>
           </article>
 
           <article class="card">
             <h3>NAP planeadas</h3>
-            <p>72</p>
+            <p id="dashboard-nap-total">0</p>
           </article>
 
           <div class="dashboard-lower">

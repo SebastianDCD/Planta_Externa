@@ -1,6 +1,152 @@
 
 const db = require("../database");
 
+// Los nombres internos del catálogo se conservan. Estas transformaciones
+// aplican únicamente a los materiales que salen en los JSON enviados a n8n.
+const OUTPUT_MATERIAL_NAMES = {
+  "Fleje": "Flejes 5/8",
+  "Fleje 5/8": "Flejes 5/8",
+  "Fleje 5/8 (m)": "Flejes 5/8",
+  "Flejes 5/8": "Flejes 5/8",
+  "Acero m": "Acero",
+  "NAP": "Cajas NAP",
+  "Herrajes Tipo D": "Herrajes tipo D",
+  "Herrajes tipo D (pieza)": "Herrajes tipo D",
+  "remates de aceros": "Remate de aceros",
+  "Remates Acero (Pieza)": "Remate de aceros",
+  "Remates para acero": "Remate de aceros",
+  "Remate 6 hilos": "Remate de fibra 6 hilos",
+  "Fibra de 24 hilos - SYSCOM (m)": "Fibra de 24 hilos",
+  "Fibra de 6 hilos - OpticTimes": "Fibra de 6 hilos OpticTimes",
+  "Hebillas 5/8 (Pieza)": "Hebillas 5/8",
+  "Raquetas (Pieza)": "Raquetas",
+  "Splitter": "Splitter 1x8",
+  "Splitter 1X8": "Splitter 1x8",
+  "Splitter 1x2": "Splitter 1x2",
+  "Splitter 1X2 (Pieza)": "Splitter 1x2",
+  "Tensores": "Tensor TotalPlay",
+  "Tensor": "Tensor TotalPlay",
+  "Tensores Drop": "Tensor TotalPlay",
+  "Tensores drop": "Tensor TotalPlay",
+  "tensores drop": "Tensor TotalPlay",
+  "Tensor Drop": "Tensor TotalPlay",
+  "Tensor TotalPlay": "Tensor TotalPlay",
+  "tensor totalplay": "Tensor TotalPlay",
+  "Cierre de empalme primer nivel": "Cierre de empalme de primer nivel"
+};
+
+function getOutputMaterialName(name) {
+  const normalizedName = String(name || "").trim();
+  return OUTPUT_MATERIAL_NAMES[normalizedName] || normalizedName;
+}
+
+function getOutputMaterialUnit(name, unit) {
+  // La nomenclatura solicitada para Acero siempre se reporta en piezas.
+  if (["Acero", "Acero m"].includes(String(name || "").trim())) {
+    return "pza";
+  }
+
+  if (["Tensor", "Tensores", "Tensores Drop", "Tensor Drop", "Tensor TotalPlay"].includes(String(name || "").trim())) {
+    return "pza";
+  }
+
+  return unit;
+}
+
+function formatOutputMaterial(material, quantityField = "actual_quantity") {
+  const quantity = Number(material.actual_quantity ?? material.quantity ?? 0);
+  return {
+    name: getOutputMaterialName(material.name),
+    [quantityField]: quantity,
+    unit: getOutputMaterialUnit(material.name, material.unit)
+  };
+}
+
+function formatOutputMaterials(materials, quantityField = "actual_quantity") {
+  const totals = new Map();
+
+  for (const material of materials) {
+    const formatted = formatOutputMaterial(material, quantityField);
+    if (!Number.isFinite(formatted[quantityField]) || formatted[quantityField] <= 0) continue;
+
+    const key = `${formatted.name}\u0000${formatted.unit}`;
+    const current = totals.get(key);
+    if (current) current[quantityField] += formatted[quantityField];
+    else totals.set(key, formatted);
+  }
+
+  return [...totals.values()];
+}
+
+function isFiberRunExcludedMaterial(name) {
+  const normalized = String(name || "").trim().toLowerCase();
+  return [
+    "postes usados",
+    "postes flejados",
+    "tensor totalplay",
+    "tensor",
+    "tensores",
+    "tensores drop",
+    "tensor drop",
+    "splitter 1x2",
+    "splitter 1x2 (pieza)",
+    "splitter 1x8",
+    "splitter 1x8 (pieza)"
+  ].includes(normalized);
+}
+
+function formatFiberRunMaterials(materials) {
+  const output = [];
+
+  for (const material of materials) {
+    if (isFiberRunExcludedMaterial(material.name)) continue;
+
+    const name = String(material.name || "").trim().toLowerCase();
+    const quantity = Number(material.actual_quantity ?? material.quantity ?? 0);
+    if (!Number.isFinite(quantity) || quantity <= 0) continue;
+
+    // En tendidos, el fleje se reporta por pieza: un fleje por cada 30 metros.
+    if (["fleje", "fleje 5/8", "fleje 5/8 (m)", "flejes 5/8"].includes(name)) {
+      output.push({
+        name: "Flejes 5/8",
+        actual_quantity: Math.ceil((quantity - 1e-9) / 30),
+        unit: "pza"
+      });
+      continue;
+    }
+
+    output.push(formatOutputMaterial(material));
+  }
+
+  return formatOutputMaterials(output);
+}
+
+function buildMaterialsOnlyPayload(materials) {
+  return {
+    source: "planta-externa",
+    materials
+  };
+}
+
+// Cada NAP utiliza su propio carrete. No se acumulan metros ni sobrantes
+// entre NAP: hasta 500 m corresponde un carrete de 500 m; desde 501 m,
+// corresponde un carrete de 1000 m.
+function buildUnifibraReel(meters, quantityField = "actual_quantity") {
+  const quantity = Number(meters);
+
+  if (!Number.isFinite(quantity) || quantity <= 0) {
+    return null;
+  }
+
+  return {
+    name: quantity <= 500
+      ? "Carretes unifibra 500 m"
+      : "Carretes unifibra 1000 m",
+    [quantityField]: 1,
+    unit: "carrete"
+  };
+}
+
 // ======================================================
 // CONFIGURACIÓN Y ENVÍO COMÚN A N8N
 // ======================================================
@@ -70,32 +216,23 @@ function buildNapPayload(napId) {
     WHERE nap_id = ?
       AND quantity > 0
     ORDER BY name
-  `).all(napId);
+  `).all(napId).flatMap(material => {
+    // Unifibra se captura en metros, pero n8n recibe el carrete completo.
+    if (["Unifibra mts", "Drop"].includes(material.name)) {
+      const reel = buildUnifibraReel(material.quantity, "quantity");
+      return reel ? [reel] : [];
+    }
 
-  return {
-    source: "planta-externa",
-    event: "NAP_OPENED",
+    return [{
+      ...material,
+      name: getOutputMaterialName(material.name),
+      unit: getOutputMaterialUnit(material.name, material.unit)
+    }];
+  });
 
-    project: {
-      id: nap.project_id,
-      name: nap.project_name
-    },
-
-    phase: {
-      id: nap.phase_id,
-      name: nap.phase_name
-    },
-
-    nap: {
-      id: nap.nap_id,
-      number: nap.nap_number,
-      opening_date: nap.opening_date,
-      opening_power: nap.opening_power,
-      construction_status: nap.construction_status
-    },
-
-    materials
-  };
+  return buildMaterialsOnlyPayload(
+    formatOutputMaterials(materials, "actual_quantity")
+  );
 }
 
 async function sendNapToN8n(napId) {
@@ -154,46 +291,13 @@ function buildConstructionPhasePayload(constructionPhaseId) {
     ORDER BY id
   `);
 
-  const excludedMaterials = [
-    "postes usados",
-    "postes flejados"
-  ];
+  const allMaterials = runs.flatMap(run =>
+    formatFiberRunMaterials(getMaterials.all(run.id))
+  );
 
-  const formattedRuns = runs.map(run => ({
-    name: run.name,
-    strand_count: run.strand_count,
-    completed_at: run.completed_at,
-    materials: getMaterials.all(run.id)
-      .filter(material =>
-        !excludedMaterials.includes(material.name.trim().toLowerCase())
-      )
-      .map(material => ({
-        name: material.name,
-        actual_quantity: material.actual_quantity,
-        unit: material.unit
-      }))
-  }));
-
-  return {
-    source: "planta-externa",
-    event: "CONSTRUCTION_PHASE_COMPLETED",
-    report_id: phase.n8n_report_id,
-    report_version: phase.report_version,
-
-    project: {
-      id: phase.project_id,
-      name: phase.project_name
-    },
-
-    construction_phase: {
-      id: phase.id,
-      number: phase.number,
-      name: phase.name,
-      status: phase.status
-    },
-
-    runs: formattedRuns
-  };
+  return buildMaterialsOnlyPayload(
+    formatOutputMaterials(allMaterials)
+  );
 }
 
 
@@ -246,41 +350,9 @@ function buildFiberRunPayload(runId) {
     ORDER BY id
   `).all(runId);
 
-  const excluded = ["postes usados", "postes flejados"];
-
-  return {
-    source: "planta-externa",
-    event: "FIBER_RUN_COMPLETED",
-    report_id: run.n8n_report_id,
-
-    project: {
-      id: run.project_id,
-      name: run.project_name
-    },
-
-    construction_phase: {
-      id: run.construction_phase_id,
-      number: run.phase_number,
-      name: run.phase_name
-    },
-
-    fiber_run: {
-      id: run.id,
-      name: run.name,
-      strand_count: run.strand_count,
-      completed_at: run.completed_at
-    },
-
-    materials: materials
-      .filter(material =>
-        !excluded.includes(material.name.trim().toLowerCase())
-      )
-      .map(material => ({
-        name: material.name,
-        actual_quantity: material.actual_quantity,
-        unit: material.unit
-      }))
-  };
+  return buildMaterialsOnlyPayload(
+    formatFiberRunMaterials(materials)
+  );
 }
 
 async function sendFiberRunToN8n(runId) {
@@ -379,21 +451,22 @@ function buildNapDistributionPayload(napId) {
     'Postes que se flejó'
   ]);
 
-  const outputNames = {
-    'Drop': 'unifibra',
-    'Splitter': 'Splitter 1X8',
-    'Tensores': 'Tensor TotalPlay'
-  };
-
   const materials = db.prepare(`
     SELECT c.name, dm.actual_quantity, c.unit
     FROM nap_distribution_materials dm
     JOIN nap_distribution_material_catalog c ON c.id = dm.catalog_id
     WHERE dm.nap_id = ?
       AND dm.actual_quantity > 0
-      AND c.name NOT IN ('Fleje', 'Acero')
+      AND c.name NOT IN ('Drop', 'Fleje', 'Acero')
     ORDER BY c.id
   `).all(napId);
+
+  const unifibra = db.prepare(`
+    SELECT dm.actual_quantity
+    FROM nap_distribution_materials dm
+    JOIN nap_distribution_material_catalog c ON c.id = dm.catalog_id
+    WHERE dm.nap_id = ? AND c.name = 'Drop'
+  `).get(napId);
 
   const fleje = db.prepare(`
     SELECT dm.actual_quantity
@@ -413,16 +486,19 @@ function buildNapDistributionPayload(napId) {
 
   const reportMaterials = materials
     .filter(material => !excludedMaterials.has(material.name))
-    .map(material => ({
-      name: outputNames[material.name] || material.name,
-      actual_quantity: material.actual_quantity,
-      unit: material.unit
-    }));
+    .map(material => formatOutputMaterial(material));
+
+  // Cada NAP se reporta por separado: el metraje de Drop determina un solo
+  // carrete para esa NAP, sin acumular ni reutilizar sobrantes de otras NAP.
+  if (unifibra && unifibra.actual_quantity !== null) {
+    const reel = buildUnifibraReel(unifibra.actual_quantity);
+    if (reel) reportMaterials.push(reel);
+  }
 
   // El Fleje se reporta únicamente cuando el acumulado asigna una o más piezas.
   if (fleje && fleje.actual_quantity !== null && flejeAllocation.pieces > 0) {
     reportMaterials.push({
-      name: 'Fleje',
+      name: 'Flejes 5/8',
       actual_quantity: flejeAllocation.pieces,
       unit: 'pza'
     });
@@ -436,17 +512,9 @@ function buildNapDistributionPayload(napId) {
     });
   }
 
-  return {
-    source: 'planta-externa',
-    event: 'NAP_DISTRIBUTION_COMPLETED',
-    report_id: nap.report_id,
-    group: nap.display_code,
-    nap: {
-      id: nap.nap_id,
-      number: nap.nap_number
-    },
-    materials: reportMaterials
-  };
+  return buildMaterialsOnlyPayload(
+    formatOutputMaterials(reportMaterials)
+  );
 }
 
 async function sendNapDistributionToN8n(napId) {

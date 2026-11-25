@@ -1,3 +1,8 @@
+let activeProjectId = null;
+let activeProjectName = "";
+
+const projectSelect = document.getElementById("active-project-select");
+
 const phasesContainer = document.getElementById("phases-container");
 const phaseDetail = document.getElementById("phase-detail");
 const napsContainer = document.getElementById("naps-container");
@@ -41,6 +46,61 @@ constructionPhaseSelect.addEventListener("change", () => {
     loadFiberRuns(phaseId);
   }
 });
+
+
+function showNapSendToast(success) {
+  const existingToast = document.getElementById("nap-send-toast");
+  if (existingToast) existingToast.remove();
+
+  const toast = document.createElement("div");
+  toast.id = "nap-send-toast";
+  toast.setAttribute("role", "status");
+  toast.setAttribute("aria-live", "polite");
+
+  Object.assign(toast.style, {
+    position: "fixed",
+    top: "24px",
+    right: "24px",
+    zIndex: "99999",
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
+    maxWidth: "calc(100vw - 32px)",
+    padding: "14px 20px",
+    borderRadius: "12px",
+    color: "#ffffff",
+    background: success ? "#198754" : "#dc3545",
+    boxShadow: "0 8px 24px rgba(0, 0, 0, 0.18)",
+    fontSize: "15px",
+    fontWeight: "600",
+    opacity: "0",
+    transform: "translateY(-8px)",
+    transition: "opacity 180ms ease, transform 180ms ease"
+  });
+
+  const icon = document.createElement("span");
+  icon.textContent = success ? "✓" : "✕";
+  icon.setAttribute("aria-hidden", "true");
+  Object.assign(icon.style, { fontSize: "20px", lineHeight: "1" });
+
+  const message = document.createElement("span");
+  message.textContent = success ? "Envío exitoso" : "Envío no exitoso";
+
+  toast.append(icon, message);
+  document.body.appendChild(toast);
+
+  requestAnimationFrame(() => {
+    toast.style.opacity = "1";
+    toast.style.transform = "translateY(0)";
+  });
+
+  window.setTimeout(() => {
+    toast.style.opacity = "0";
+    toast.style.transform = "translateY(-8px)";
+    window.setTimeout(() => toast.remove(), 220);
+  }, 3500);
+}
+
 
 function navigateTo(section) {
   tendidosSection.hidden = section !== "tendidos";
@@ -126,7 +186,7 @@ async function loadMaterials() {
   try {
     materialsContainer.innerHTML = "<p>Cargando materiales...</p>";
 
-    const response = await fetch("/api/materials?project_id=1");
+    const response = await fetch(`/api/materials?project_id=${activeProjectId}`);
     const result = await response.json();
 
     if (!result.success) {
@@ -137,7 +197,7 @@ async function loadMaterials() {
 
     const phaseSelect = document.getElementById("materials-phase-select");
 
-    const phasesResponse = await fetch("/api/phases?project_id=1");
+    const phasesResponse = await fetch(`/api/phases?project_id=${activeProjectId}`);
     const phasesResult = await phasesResponse.json();
 
     if (!phasesResult.success) {
@@ -288,7 +348,7 @@ materialsPhaseSelect.addEventListener("change", () => {
 // Consultar fases desde SQLite
 async function loadPhases() {
   try {
-    const response = await fetch("/api/phases?project_id=1");
+    const response = await fetch(`/api/phases?project_id=${activeProjectId}`);
     const result = await response.json();
 
     console.log("Respuesta de fases:", response.status, result);
@@ -298,6 +358,12 @@ async function loadPhases() {
     }
 
     const phases = result.data;
+
+    document.getElementById("active-project-name").textContent = activeProjectName;
+    document.getElementById("dashboard-phase-total").textContent = phases.length;
+    document.getElementById("dashboard-nap-total").textContent = phases.reduce(
+      (total, phase) => total + phase.naps.length, 0
+    );
 
     renderPhases(phases);
     renderProgress(phases);
@@ -461,23 +527,19 @@ function renderProgress(phases) {
     `${completedMeters.toLocaleString("es-MX")} / ${totalMeters.toLocaleString("es-MX")} m`;
 
   // Organización de grupos por fase de construcción
-  const constructionGroups = [
-    {
-      number: 4,
-      name: "Fase 04",
-      groups: ["1N01", "1N02", "1N03"],
-    },
-    {
-      number: 5,
-      name: "Fase 05",
-      groups: ["1N09", "1N04", "1N08"],
-    },
-    {
-      number: 6,
-      name: "Fase 06",
-      groups: ["1N05", "1N06", "1N07"],
-    },
-  ];
+  // La distribución especial de grupos se conserva exclusivamente para UACH.
+  // Los demás proyectos muestran sus fases sin imponerles la nomenclatura 1NXX.
+  const constructionGroups = activeProjectName === "UACH"
+    ? [
+        { number: 4, name: "Fase 04", groups: ["1N01", "1N02", "1N03"] },
+        { number: 5, name: "Fase 05", groups: ["1N09", "1N04", "1N08"] },
+        { number: 6, name: "Fase 06", groups: ["1N05", "1N06", "1N07"] },
+      ]
+    : [{
+        number: null,
+        name: "Fases del proyecto",
+        groups: phases.map((phase) => phase.display_code || phase.name),
+      }];
 
   constructionGroups.forEach((constructionGroup) => {
     const section = document.createElement("section");
@@ -576,7 +638,7 @@ async function loadConstructionProgress() {
 
   try {
     const response = await fetch(
-      "/api/construction-phases?project_id=1"
+      `/api/construction-phases?project_id=${activeProjectId}`
     );
 
     const result = await response.json();
@@ -894,12 +956,72 @@ document.getElementById("back-button").addEventListener("click", () => {
   dashboardCards.hidden = false;
 });
 
+// Cargar proyectos disponibles y establecer el contexto de trabajo.
+async function initializeProjects() {
+  try {
+    const response = await fetch("/api/projects");
+    const result = await response.json();
+
+    if (!response.ok || !result.success || !Array.isArray(result.data)) {
+      throw new Error("No se pudieron cargar los proyectos disponibles.");
+    }
+
+    projectSelect.innerHTML = "";
+
+    result.data.forEach((project) => {
+      const option = document.createElement("option");
+      option.value = project.id;
+      option.textContent = project.name;
+      projectSelect.appendChild(option);
+    });
+
+    if (result.data.length === 0) {
+      projectSelect.innerHTML = '<option value="">No hay proyectos registrados</option>';
+      throw new Error("No hay proyectos registrados en la base de datos.");
+    }
+
+    // UACH se conserva como selección inicial mientras sea un proyecto registrado.
+    const initialProject = result.data.find((project) => project.name === "UACH") || result.data[0];
+    projectSelect.value = String(initialProject.id);
+    activeProjectId = Number(initialProject.id);
+    activeProjectName = initialProject.name;
+
+    await loadPhases();
+  } catch (error) {
+    console.error("Error inicializando proyectos:", error);
+    phasesContainer.textContent = error.message;
+  }
+}
+
+projectSelect.addEventListener("change", async () => {
+  const selected = projectSelect.selectedOptions[0];
+  const nextProjectId = Number(projectSelect.value);
+
+  if (!Number.isInteger(nextProjectId) || nextProjectId <= 0) return;
+
+  activeProjectId = nextProjectId;
+  activeProjectName = selected?.textContent || "";
+
+  // Limpiar selecciones y contenido dependiente del proyecto anterior.
+  constructionPhaseSelect.innerHTML = '<option value="">Selecciona una fase</option>';
+  fiberRunsContainer.innerHTML = "";
+  napDistributionContainer.innerHTML = "";
+  document.getElementById("materials-phase-select").innerHTML = '<option value="">Selecciona una fase</option>';
+  document.getElementById("phase-materials-container").innerHTML = "";
+
+  await loadPhases();
+
+  const visibleSection = [...navLinks].find((link) => link.classList.contains("active"))?.dataset.section;
+  if (visibleSection === "materials") await loadMaterials();
+  if (visibleSection === "tendidos") await loadConstructionPhases();
+});
+
 // Iniciar aplicación
-loadPhases();
+initializeProjects();
 
 async function loadConstructionPhases() {
   try {
-    const response = await fetch("/api/construction-phases?project_id=1");
+    const response = await fetch(`/api/construction-phases?project_id=${activeProjectId}`);
     const result = await response.json();
 
     if (!result.success) {
@@ -927,6 +1049,68 @@ async function loadConstructionPhases() {
   }
 }
 
+function normalizeFiberMaterialName(name) {
+  return String(name || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s*\((?:m|pza|pieza)\)\s*$/i, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
+function setupFiberRunAutomaticMaterials(card) {
+  const inputs = [...card.querySelectorAll("[data-material-id]")];
+  const normalized = (input) => normalizeFiberMaterialName(input.dataset.materialName);
+  const findInputs = (aliases) => inputs.filter((input) => aliases.includes(normalized(input)));
+  const findFirstInput = (aliases) => findInputs(aliases)[0] || null;
+  const readNumber = (input) => {
+    const value = input ? Number(input.value) : 0;
+    return Number.isFinite(value) && value >= 0 ? value : 0;
+  };
+
+  const setCalculated = (targets, value) => {
+    targets.forEach((input) => {
+      input.readOnly = true;
+      input.step = "1";
+    });
+    if (targets.length) targets[0].value = String(value);
+    targets.slice(1).forEach((input) => { input.value = "0"; });
+  };
+
+  const usedPosts = findFirstInput([
+    "postes usados",
+    "postes utilizado",
+    "postes utilizados",
+    "posteria total",
+    "posteria utilizada"
+  ]);
+  const strappedPosts = findFirstInput([
+    "postes flejados",
+    "postes que se flejo",
+    "postes que se flejaron"
+  ]);
+
+  const flejeInputs = findInputs(["fleje", "fleje 5 8", "flejes 5 8"]);
+  const hardwareInputs = findInputs(["herrajes tipo d", "herrajes d"]);
+  const buckleInputs = findInputs(["hebillas 5 8", "hebillas"]);
+  [...flejeInputs, ...hardwareInputs, ...buckleInputs]
+    .forEach((input) => { input.readOnly = true; });
+
+  const recalculate = () => {
+    const strapped = readNumber(strappedPosts);
+    setCalculated(flejeInputs, Number((strapped * 1.5).toFixed(2)));
+    setCalculated(hardwareInputs, strapped * 2);
+    setCalculated(buckleInputs, strapped);
+  };
+
+  [usedPosts, strappedPosts].filter(Boolean).forEach((input) => {
+    input.addEventListener("input", recalculate);
+    input.addEventListener("change", recalculate);
+  });
+
+  recalculate();
+}
 async function loadFiberRuns(phaseId) {
   try {
     const response = await fetch(`/api/construction-phases/${phaseId}/runs`);
@@ -995,26 +1179,47 @@ async function loadFiberRuns(phaseId) {
 
     <div class="fiber-materials-grid">
       ${run.materials
-        .map(
-          (material) => `
-        <label class="fiber-material">
-          <span>
-            ${material.name.replace(/\s*\((?:m|pza|pieza)\)\s*$/i, "")}
-          </span>
+        .map((material) => {
+          const materialKey = normalizeFiberMaterialName(material.name);
+          const isHiddenOperationalMaterial =
+            materialKey === "splitter 1x2" ||
+            materialKey === "tensor totalplay" ||
+            materialKey === "tensor" ||
+            materialKey === "tensores" ||
+            materialKey === "tensores drop" ||
+            materialKey === "tensor drop";
 
-          <small>${material.unit}</small>
-
-          <input
-            type="number"
-            min="0"
-            step="any"
-            value="${material.actual_quantity}"
+          const commonAttributes = `
             data-material-id="${material.id}"
+            data-material-name="${material.name}"
+            data-material-unit="${material.unit}"
             ${run.status === "COMPLETADO" ? "disabled" : ""}
-          >
-        </label>
-      `,
-        )
+          `;
+
+          if (isHiddenOperationalMaterial) {
+            return `
+              <input
+                type="hidden"
+                value="${Number(material.actual_quantity) || 0}"
+                ${commonAttributes}
+              >
+            `;
+          }
+
+          return `
+            <label class="fiber-material">
+              <span>${material.name.replace(/\s*\((?:m|pza|pieza)\)\s*$/i, "")}</span>
+              <small>${material.unit}</small>
+              <input
+                type="number"
+                min="0"
+                step="${material.unit === "pza" ? "1" : "any"}"
+                value="${material.actual_quantity ?? 0}"
+                ${commonAttributes}
+              >
+            </label>
+          `;
+        })
         .join("")}
     </div>
   </div>
@@ -1044,6 +1249,9 @@ async function loadFiberRuns(phaseId) {
 `;
 
         fiberRunsContainer.appendChild(card);
+
+        // Las cantidades derivadas se calculan a partir de los dos datos capturados.
+        setupFiberRunAutomaticMaterials(card);
 
         // Guardar cantidades
         card
@@ -1186,7 +1394,6 @@ async function loadNapDistribution(phaseId) {
 
     napDistributionContainer.innerHTML = `
       <h2>${result.phase.name} | Distribución de NAP</h2>
-      <p class="distribution-help">Fleje se captura en metros y se convierte automáticamente en piezas por cada 30 m acumulados en UACH. El orden de cálculo es 1N01 a 1N09 y NAP 01 a 08. Acero se captura en piezas enteras.</p>
     `;
 
     result.data.forEach((group) => {
@@ -1195,8 +1402,8 @@ async function loadNapDistribution(phaseId) {
       groupCard.innerHTML = `
         <div class="distribution-group-header">
           <div>
-            <span class="distribution-group-code">${group.display_code}</span>
-            <h3>${group.name}</h3>
+            <h3>${group.display_code}</h3>
+            <span class="distribution-group-code">${group.name}</span>
           </div>
           <span class="distribution-group-count">${group.naps.length} NAP</span>
         </div>
@@ -1213,7 +1420,7 @@ async function loadNapDistribution(phaseId) {
             ? "ACTUALIZAR"
             : nap.n8n_status === "SENT"
               ? "ENVIADO"
-            : nap.n8n_status === "ERROR" ? "ERROR" : "PENDIENTE";
+              : nap.n8n_status === "ERROR" ? "ERROR" : "PENDIENTE";
 
         card.innerHTML = `
           <div class="nap-distribution-header">
@@ -1232,21 +1439,39 @@ async function loadNapDistribution(phaseId) {
           <div class="nap-distribution-materials">
             <h5>Materiales utilizados</h5>
             <div class="distribution-materials-grid">
-              ${nap.materials.map((material) => `
-                <label class="distribution-material">
-                  <span>${material.name}</span>
-                  <small>${material.name === "Fleje" ? "m capturados" : material.name === "Acero" ? "pza" : material.unit}</small>
-                  <input
-                    type="number"
-                    min="0"
-                    step="${material.unit === "pza" ? "1" : "any"}"
-                    value="${material.actual_quantity ?? ""}"
-                    data-material-id="${material.id}"
-                    data-material-name="${material.name}"
-                    data-material-unit="${material.unit}"
-                  >
-                </label>
-              `).join("")}
+              ${nap.materials.map((material) => {
+                const isDerived = [
+                  "Fleje",
+                  "Tensores",
+                  "Herrajes tipo D",
+                  "Remates para acero"
+                ].includes(material.name);
+                const isFixed = material.name === "NAP" || material.name === "Splitter";
+                const isOptional = material.name === "Splitter 1x2";
+                const displayName = material.name === "Splitter"
+                  ? "Splitter 1x8"
+                  : material.name;
+                const displayUnit = material.name === "Fleje"
+                  ? "m calculados"
+                  : material.unit;
+
+                return `
+                  <label class="distribution-material">
+                    <span>${displayName}</span>
+                    <small>${isOptional ? "opcional · " : ""}${displayUnit}</small>
+                    <input
+                      type="number"
+                      min="0"
+                      step="${material.unit === "pza" ? "1" : "any"}"
+                      value="${isFixed ? "1" : material.actual_quantity ?? ""}"
+                      data-material-id="${material.id}"
+                      data-material-name="${material.name}"
+                      data-material-unit="${material.unit}"
+                      ${isDerived || isFixed ? "readonly" : ""}
+                    >
+                  </label>
+                `;
+              }).join("")}
             </div>
           </div>
           <div class="nap-distribution-actions">
@@ -1258,7 +1483,44 @@ async function loadNapDistribution(phaseId) {
         `;
         list.appendChild(card);
 
+        // Los campos derivados se recalculan en pantalla al modificar sus cantidades base.
+        function recalculateDerivedMaterials() {
+          const getInput = (name) => card.querySelector(
+            `[data-material-name="${name}"]`
+          );
+          const getNumber = (name) => {
+            const input = getInput(name);
+            const value = input ? Number(input.value) : 0;
+            return Number.isFinite(value) ? value : 0;
+          };
+          const setValue = (name, value) => {
+            const input = getInput(name);
+            if (input) input.value = String(value);
+          };
+
+          const flejeMeters = Number((getNumber("Postes que se flejó") * 1.5).toFixed(2));
+          setValue("Fleje", flejeMeters);
+          setValue("Tensores", getNumber("Postería total") * 2);
+          setValue("Herrajes tipo D", getNumber("Postes que se flejó") * 2);
+          setValue("Remates para acero", getNumber("Acero") * 2);
+          setValue("NAP", 1);
+          setValue("Splitter", 1);
+        }
+
+        card.querySelectorAll(
+          '[data-material-name="Postería total"], ' +
+          '[data-material-name="Postes que se flejó"], ' +
+          '[data-material-name="Acero"]'
+        ).forEach((input) => {
+          input.addEventListener("input", recalculateDerivedMaterials);
+        });
+
+        recalculateDerivedMaterials();
+
         async function saveNapMaterials() {
+          // Asegurar que el payload guardado siempre use los valores calculados más recientes.
+          recalculateDerivedMaterials();
+
           const inputs = card.querySelectorAll("[data-material-id]");
           for (const input of inputs) {
             const raw = input.value.trim();
@@ -1311,10 +1573,11 @@ async function loadNapDistribution(phaseId) {
             const sendResponse = await fetch(`/api/naps/${nap.id}/distribution/complete`, { method: "PATCH" });
             const sendResult = await sendResponse.json();
             if (!sendResponse.ok) throw new Error(sendResult.message || sendResult.error);
-            alert(sendResult.n8n?.sent ? "Reporte individual enviado/actualizado correctamente." : `No se pudo enviar: ${sendResult.n8n?.error || "Error desconocido"}`);
+            showNapSendToast(Boolean(sendResult.n8n?.sent));
             await loadNapDistribution(phaseId);
           } catch (error) {
-            alert(error.message);
+            console.error("Error al enviar reporte de distribución NAP:", error);
+            showNapSendToast(false);
             await loadNapDistribution(phaseId);
           }
         });

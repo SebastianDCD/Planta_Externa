@@ -6,8 +6,8 @@
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background: #f1f5f9;
-    color: #1e293b;
+    background: #EEF4F0;
+    color: #203534;
 }
 
 .app-container {
@@ -19,7 +19,7 @@ body {
 
 .sidebar {
     width: 250px;
-    background: #172554;
+    background: #102A2A;
     color: white;
     padding: 30px 20px;
 }
@@ -36,7 +36,7 @@ body {
 }
 
 .sidebar a {
-    color: #cbd5e1;
+    color: #C7D7D0;
     text-decoration: none;
     padding: 12px;
     border-radius: 8px;
@@ -45,7 +45,7 @@ body {
 
 .sidebar a:hover,
 .sidebar a.active {
-    background: #2563eb;
+    background: #347B75;
     color: white;
 }
 
@@ -68,7 +68,7 @@ body {
 }
 
 .topbar span {
-    color: #64748b;
+    color: #718781;
 }
 
 /* DASHBOARD */
@@ -83,21 +83,21 @@ body {
 .card {
     background: white;
     padding: 25px;
-    border: 1px solid #e2e8f0;
+    border: 1px solid #DCE7E2;
     border-radius: 14px;
     box-shadow: 0 3px 10px rgba(15, 23, 42, 0.04);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .card h3 {
-    color: #64748b;
+    color: #718781;
     font-size: 13px;
     font-weight: 600;
     margin-bottom: 14px;
 }
 
 .card p {
-    color: #1e293b;
+    color: #203534;
     font-size: 27px;
     font-weight: 700;
 }
@@ -105,7 +105,7 @@ body {
 /* IDENTIDAD DEL PROYECTO */
 
 .project-card {
-    background: #1e40af;
+    background: #1F4D4A;
     color: white;
     border: none;
     grid-column: span 3;
@@ -115,7 +115,7 @@ body {
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 1.2px;
-    color: #bfdbfe;
+    color: #B7D4CB;
 }
 
 .project-card h2 {
@@ -124,7 +124,7 @@ body {
 }
 
 .project-card p {
-    color: #dbeafe;
+    color: #D5E9E3;
     font-size: 14px;
     font-weight: 400;
     margin: 0;
@@ -177,10 +177,10 @@ body {
 .phase-card {
     background: #ffffff;
     padding: 24px;
-    border: 1px solid #e2e8f0;
+    border: 1px solid #DCE7E2;
     border-radius: 16px;
     box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
-    border-top: 4px solid #2563eb;
+    border-top: 4px solid #347B75;
     transition: transform 0.2s, box-shadow 0.2s;
     cursor: pointer;
 }
@@ -192,12 +192,12 @@ body {
 
 .phase-card h3 {
     font-size: 19px;
-    color: #1e293b;
+    color: #203534;
     margin-bottom: 6px;
 }
 
 .phase-card > p {
-    color: #64748b;
+    color: #718781;
     font-size: 13px;
     margin-bottom: 18px;
 }
@@ -213,19 +213,19 @@ body {
     display: flex;
     flex-direction: column;
     gap: 7px;
-    background: #f8fafc;
+    background: #F5F8F6;
     padding: 14px;
     border-radius: 10px;
 }
 
 .phase-metrics span {
     font-size: 12px;
-    color: #64748b;
+    color: #718781;
 }
 
 .phase-metrics strong {
     font-size: 21px;
-    color: #1e293b;
+    color: #203534;
 }
 
 .phase-nap-info {
@@ -236,8 +236,8 @@ body {
 }
 
 .phase-nap-info span {
-    background: #f1f5f9;
-    color: #475569;
+    background: #EEF4F0;
+    color: #526A65;
     padding: 6px 9px;
     border-radius: 7px;
     font-size: 12px;
@@ -271,8 +271,8 @@ body {
 }
 
 #back-button {
-    background: #e2e8f0;
-    color: #1e293b;
+    background: #DCE7E2;
+    color: #203534;
     border: none;
     padding: 10px 16px;
     border-radius: 8px;
@@ -283,7 +283,7 @@ body {
 }
 
 #back-button:hover {
-    background: #cbd5e1;
+    background: #C7D7D0;
 }
 
 .phase-detail-header {
@@ -296,7 +296,7 @@ body {
 }
 
 .phase-detail-header p {
-    color: #2563eb;
+    color: #347B75;
 }
 
 /* RESUMEN DE METRAJE */
@@ -324,7 +324,7 @@ body {
 .nap-row {
     background: white;
     padding: 20px 24px;
-    border: 1px solid #e2e8f0;
+    border: 1px solid #DCE7E2;
     border-radius: 14px;
     display: grid;
     grid-template-columns: 100px 1fr 1.5fr auto;
@@ -341,11 +341,11 @@ body {
 
 .nap-row > strong {
     font-size: 16px;
-    color: #1e293b;
+    color: #203534;
 }
 
 .nap-row > span {
-    color: #475569;
+    color: #526A65;
     font-size: 14px;
 }
 
@@ -362,8 +362,8 @@ body {
 }
 
 .nap-status-info span {
-    background: #f1f5f9;
-    color: #475569;
+    background: #EEF4F0;
+    color: #526A65;
     padding: 6px 10px;
     border-radius: 7px;
     font-size: 12px;
@@ -377,7 +377,7 @@ body {
 
 .complete-button {
     justify-self: end;
-    background: #2563eb;
+    background: #347B75;
     color: white;
     border: none;
     padding: 11px 16px;
@@ -390,7 +390,7 @@ body {
 }
 
 .complete-button:hover {
-    background: #1d4ed8;
+    background: #28645F;
 }
 
 .complete-button.completed {
@@ -438,14 +438,14 @@ body {
 
 .opening-form strong {
     grid-column: 1 / -1;
-    color: #1e293b;
+    color: #203534;
     font-size: 15px;
 }
 
 .opening-form label {
     display: block;
     margin-bottom: 6px;
-    color: #475569;
+    color: #526A65;
     font-size: 13px;
     font-weight: 600;
 }
@@ -453,7 +453,7 @@ body {
 .opening-form input {
     width: 100%;
     padding: 10px 12px;
-    border: 1px solid #cbd5e1;
+    border: 1px solid #C7D7D0;
     border-radius: 8px;
     font-size: 14px;
     box-sizing: border-box;
@@ -465,7 +465,7 @@ body {
     width: auto;
     min-width: 260px;
     padding: 12px 20px;
-    background: #2563eb;
+    background: #347B75;
     color: white;
     border: none;
     border-radius: 8px;
@@ -489,14 +489,14 @@ body {
 }
 
 #progress-percentage {
-    color: #2563eb;
+    color: #347B75;
     font-size: 18px;
 }
 
 .progress-bar {
     width: 100%;
     height: 12px;
-    background: #e2e8f0;
+    background: #DCE7E2;
     border-radius: 20px;
     overflow: hidden;
 }
@@ -554,7 +554,7 @@ body {
 
 #close-modal {
     border: none;
-    background: #1e293b;
+    background: #203534;
     color: white;
     padding: 11px 24px;
     border-radius: 8px;
@@ -563,7 +563,7 @@ body {
 }
 
 #close-modal:hover {
-    background: #334155;
+    background: #344C49;
 }
 
 /* Indicadores de las tarjetas de fases */
@@ -582,12 +582,12 @@ body {
 
 .phase-metrics span {
     font-size: 12px;
-    color: #64748b;
+    color: #718781;
 }
 
 .phase-metrics strong {
     font-size: 20px;
-    color: #1e293b;
+    color: #203534;
 }
 
 .phase-nap-info {
@@ -596,7 +596,7 @@ body {
     gap: 10px;
     margin-bottom: 12px;
     font-size: 13px;
-    color: #475569;
+    color: #526A65;
 }
 
 [hidden] {
@@ -606,11 +606,11 @@ body {
 /* IDENTIDAD VISUAL DE INDICADORES */
 
 .dashboard-cards > .card:nth-child(2) {
-    border-top: 4px solid #2563eb;
+    border-top: 4px solid #347B75;
 }
 
 .dashboard-cards > .card:nth-child(3) {
-    border-top: 4px solid #94a3b8;
+    border-top: 4px solid #A1B5AE;
 }
 
 .dashboard-cards > .card:nth-child(4) {
@@ -626,7 +626,7 @@ body {
 }
 
 .dashboard-cards > .card:nth-child(7) {
-    border-top: 4px solid #60a5fa;
+    border-top: 4px solid #6FA69D;
 }
 
 /* AVANCE GENERAL POR FASE */
@@ -641,26 +641,26 @@ body {
 .progress-card {
     background: white;
     padding: 22px;
-    border: 1px solid #e2e8f0;
+    border: 1px solid #DCE7E2;
     border-radius: 14px;
     box-shadow: 0 3px 10px rgba(15, 23, 42, 0.04);
 }
 
 .progress-card h3 {
-    color: #1e293b;
+    color: #203534;
     font-size: 17px;
     margin-bottom: 18px;
 }
 
 .progress-card p {
-    color: #64748b;
+    color: #718781;
     font-size: 13px;
     margin: 12px 0;
 }
 
 .progress-card .progress-bar {
     height: 10px;
-    background: #e2e8f0;
+    background: #DCE7E2;
     border-radius: 20px;
     overflow: hidden;
 }
@@ -695,7 +695,7 @@ body {
 
 #progress-section .progress-summary .card {
     padding: 24px;
-    border-top: 4px solid #2563eb;
+    border-top: 4px solid #347B75;
 }
 
 #progress-section .progress-summary .card:nth-child(2) {
@@ -703,7 +703,7 @@ body {
 }
 
 #progress-section .progress-summary .card:nth-child(3) {
-    border-top-color: #94a3b8;
+    border-top-color: #A1B5AE;
 }
 
 #progress-section .progress-summary .card h3 {
@@ -712,7 +712,7 @@ body {
 
 #progress-section .progress-summary .card p {
     font-size: 28px;
-    color: #1e293b;
+    color: #203534;
 }
 
 @media (max-width: 700px) {
@@ -744,11 +744,11 @@ body {
 #phase-materials-container td {
   padding: 10px 12px;
   text-align: left;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid #DCE7E2;
 }
 
 #phase-materials-container th {
-  color: #64748b;
+  color: #718781;
   font-size: 13px;
   font-weight: 600;
 }
@@ -777,7 +777,7 @@ body {
 #tendidos-section .card {
   padding: 22px;
   margin-bottom: 16px;
-  border-left: 4px solid #2563eb;
+  border-left: 4px solid #347B75;
 }
 
 #fiber-runs-container {
@@ -793,7 +793,7 @@ body {
 }
 
 #fiber-runs-container .card h3 {
-  color: #1e293b;
+  color: #203534;
   font-size: 20px;
   margin-bottom: 12px;
 }
@@ -802,39 +802,39 @@ body {
   display: inline-block;
   font-size: 13px;
   font-weight: 600;
-  color: #64748b;
-  background: #f1f5f9;
+  color: #718781;
+  background: #EEF4F0;
   padding: 6px 10px;
   border-radius: 7px;
   margin: 0 6px 16px 0;
 }
 
 #fiber-runs-container .run-materials {
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid #DCE7E2;
   padding-top: 12px;
 }
 
 #fiber-runs-container .run-materials label {
   font-size: 13px;
-  color: #475569;
+  color: #526A65;
   padding: 5px 0;
-  border-bottom: 1px solid #f1f5f9;
+  border-bottom: 1px solid #EEF4F0;
 }
 
 #fiber-runs-container .run-materials input {
   width: 105px !important;
   padding: 8px 10px;
-  border: 1px solid #cbd5e1;
+  border: 1px solid #C7D7D0;
   border-radius: 7px;
   background: white;
-  color: #1e293b;
+  color: #203534;
   font-size: 14px;
   text-align: right;
 }
 
 #fiber-runs-container .run-materials input:focus {
-  outline: 2px solid #93c5fd;
-  border-color: #2563eb;
+  outline: 2px solid #6FA69D;
+  border-color: #347B75;
 }
 
 #fiber-runs-container button {
@@ -850,13 +850,13 @@ body {
 
 #fiber-runs-container .save-materials,
 #fiber-runs-container .complete-run {
-  background: #2563eb;
+  background: #347B75;
   color: white;
 }
 
 #fiber-runs-container .save-materials:hover,
 #fiber-runs-container .complete-run:hover {
-  background: #1d4ed8;
+  background: #28645F;
 }
 
 #fiber-runs-container .reopen-run {
@@ -875,7 +875,7 @@ body {
 
 #construction-phase-select {
   padding: 10px 14px;
-  border: 1px solid #cbd5e1;
+  border: 1px solid #C7D7D0;
   border-radius: 8px;
   font-size: 14px;
   min-width: 180px;
@@ -913,13 +913,13 @@ body {
 #nap-distribution-container > h2 {
   font-size: 23px;
   margin: 26px 0 18px;
-  color: #1e293b;
+  color: #203534;
 }
 
 .nap-distribution-group {
   margin-bottom: 22px;
   padding: 22px;
-  border-left: 4px solid #2563eb;
+  border-left: 4px solid #347B75;
 }
 
 .distribution-group-header {
@@ -932,7 +932,7 @@ body {
 
 .distribution-group-code {
   display: inline-block;
-  color: #64748b;
+  color: #718781;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.8px;
@@ -941,12 +941,12 @@ body {
 
 .distribution-group-header h3 {
   font-size: 20px;
-  color: #1e293b;
+  color: #203534;
 }
 
 .distribution-group-count {
-  background: #eff6ff;
-  color: #1d4ed8;
+  background: #E8F2EF;
+  color: #28645F;
   padding: 8px 12px;
   border-radius: 8px;
   font-size: 12px;
@@ -964,8 +964,8 @@ body {
   min-width: 0;
   margin: 0;
   padding: 20px;
-  border: 1px solid #e2e8f0;
-  border-top: 3px solid #2563eb;
+  border: 1px solid #DCE7E2;
+  border-top: 3px solid #347B75;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
 }
@@ -980,12 +980,12 @@ body {
 
 .nap-distribution-header h4 {
   font-size: 18px;
-  color: #1e293b;
+  color: #203534;
   margin-bottom: 5px;
 }
 
 .nap-distribution-meters {
-  color: #64748b;
+  color: #718781;
   font-size: 13px;
   font-weight: 600;
 }
@@ -1015,13 +1015,13 @@ body {
 
 .distribution-badge.in-progress,
 .distribution-badge.pending {
-  background: #f1f5f9;
-  color: #475569;
+  background: #EEF4F0;
+  color: #526A65;
 }
 
 .distribution-badge.sending {
-  background: #dbeafe;
-  color: #1d4ed8;
+  background: #D5E9E3;
+  color: #28645F;
 }
 
 .distribution-badge.error {
@@ -1030,13 +1030,13 @@ body {
 }
 
 .nap-distribution-materials {
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid #DCE7E2;
   padding-top: 15px;
 }
 
 .nap-distribution-materials h5 {
   font-size: 13px;
-  color: #475569;
+  color: #526A65;
   margin-bottom: 12px;
 }
 
@@ -1051,8 +1051,8 @@ body {
   grid-template-columns: 1fr auto;
   gap: 4px 8px;
   align-items: center;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  background: #F5F8F6;
+  border: 1px solid #DCE7E2;
   border-radius: 9px;
   padding: 10px;
   margin: 0;
@@ -1060,13 +1060,13 @@ body {
 }
 
 .distribution-material span {
-  color: #475569;
+  color: #526A65;
   font-size: 12px;
   font-weight: 600;
 }
 
 .distribution-material small {
-  color: #94a3b8;
+  color: #A1B5AE;
   font-size: 10px;
 }
 
@@ -1075,22 +1075,22 @@ body {
   width: 100%;
   min-width: 0;
   padding: 8px 10px;
-  border: 1px solid #cbd5e1;
+  border: 1px solid #C7D7D0;
   border-radius: 7px;
   background: white;
-  color: #1e293b;
+  color: #203534;
   font-size: 14px;
   font-weight: 600;
 }
 
 .distribution-material input:focus {
-  outline: 2px solid #bfdbfe;
-  border-color: #2563eb;
+  outline: 2px solid #B7D4CB;
+  border-color: #347B75;
 }
 
 .distribution-material input:disabled {
-  background: #f1f5f9;
-  color: #64748b;
+  background: #EEF4F0;
+  color: #718781;
   cursor: not-allowed;
 }
 
@@ -1116,21 +1116,21 @@ body {
 }
 
 .nap-distribution-actions .save-nap-distribution {
-  background: #eff6ff;
-  color: #1d4ed8;
+  background: #E8F2EF;
+  color: #28645F;
 }
 
 .nap-distribution-actions .save-nap-distribution:hover:not(:disabled) {
-  background: #dbeafe;
+  background: #D5E9E3;
 }
 
 .nap-distribution-actions .complete-nap-distribution {
-  background: #2563eb;
+  background: #347B75;
   color: white;
 }
 
 .nap-distribution-actions .complete-nap-distribution:hover:not(:disabled) {
-  background: #1d4ed8;
+  background: #28645F;
 }
 
 .nap-distribution-actions .reopen-nap-distribution {
@@ -1252,14 +1252,14 @@ body {
 
 .dashboard-section-heading h2,
 .dashboard-shortcuts h2 {
-  color: #1e293b;
+  color: #203534;
   font-size: 18px;
   margin-bottom: 6px;
 }
 
 .dashboard-section-heading p,
 .dashboard-shortcuts > p {
-  color: #64748b;
+  color: #718781;
   font-size: 13px;
 }
 
@@ -1280,12 +1280,12 @@ body {
 }
 
 .dashboard-phase-header strong {
-  color: #334155;
+  color: #344C49;
   font-size: 13px;
 }
 
 .dashboard-phase-header span {
-  color: #64748b;
+  color: #718781;
   font-size: 12px;
   white-space: nowrap;
 }
@@ -1293,7 +1293,7 @@ body {
 .dashboard-phase-bar {
   width: 100%;
   height: 8px;
-  background: #e2e8f0;
+  background: #DCE7E2;
   border-radius: 20px;
   overflow: hidden;
 }
@@ -1316,7 +1316,7 @@ body {
   width: 100%;
   padding: 14px 10px;
   border: none;
-  border-bottom: 1px solid #e2e8f0;
+  border-bottom: 1px solid #DCE7E2;
   background: white;
   text-align: left;
   cursor: pointer;
@@ -1328,7 +1328,7 @@ body {
 }
 
 .dashboard-shortcut:hover {
-  background: #f8fafc;
+  background: #F5F8F6;
 }
 
 .shortcut-icon {
@@ -1339,8 +1339,8 @@ body {
   width: 38px;
   height: 38px;
   border-radius: 9px;
-  background: #eff6ff;
-  color: #2563eb;
+  background: #E8F2EF;
+  color: #347B75;
   font-size: 12px;
   font-weight: 700;
 }
@@ -1353,18 +1353,18 @@ body {
 }
 
 .dashboard-shortcut strong {
-  color: #1e293b;
+  color: #203534;
   font-size: 13px;
 }
 
 .dashboard-shortcut small {
-  color: #64748b;
+  color: #718781;
   font-size: 11px;
 }
 
 .shortcut-arrow {
   margin-left: auto;
-  color: #94a3b8;
+  color: #A1B5AE;
   font-size: 23px;
 }
 
@@ -1392,7 +1392,7 @@ body {
 
 #fiber-runs-container .fiber-run-card {
   padding: 22px;
-  border-top: 3px solid #2563eb;
+  border-top: 3px solid #347B75;
   border-radius: 12px;
 }
 
@@ -1406,13 +1406,13 @@ body {
 
 .fiber-run-header h3 {
   font-size: 19px;
-  color: #1e293b;
+  color: #203534;
   margin-bottom: 6px;
 }
 
 .fiber-run-strands {
   font-size: 13px;
-  color: #64748b;
+  color: #718781;
   font-weight: 600;
 }
 
@@ -1424,13 +1424,13 @@ body {
 }
 
 #fiber-runs-container .run-materials {
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid #DCE7E2;
   padding-top: 16px;
 }
 
 #fiber-runs-container .run-materials h5 {
   font-size: 13px;
-  color: #475569;
+  color: #526A65;
   margin-bottom: 12px;
 }
 
@@ -1445,21 +1445,21 @@ body {
   grid-template-columns: 1fr auto;
   gap: 4px 8px;
   align-items: center;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  background: #F5F8F6;
+  border: 1px solid #DCE7E2;
   border-radius: 9px;
   padding: 10px;
   min-width: 0;
 }
 
 .fiber-material span {
-  color: #475569;
+  color: #526A65;
   font-size: 12px;
   font-weight: 600;
 }
 
 .fiber-material small {
-  color: #94a3b8;
+  color: #A1B5AE;
   font-size: 10px;
 }
 
@@ -1468,22 +1468,22 @@ body {
   width: 100%;
   min-width: 0;
   padding: 8px 10px;
-  border: 1px solid #cbd5e1;
+  border: 1px solid #C7D7D0;
   border-radius: 7px;
   background: white;
-  color: #1e293b;
+  color: #203534;
   font-size: 14px;
   font-weight: 600;
 }
 
 .fiber-material input:focus {
-  outline: 2px solid #bfdbfe;
-  border-color: #2563eb;
+  outline: 2px solid #B7D4CB;
+  border-color: #347B75;
 }
 
 .fiber-material input:disabled {
-  background: #f1f5f9;
-  color: #64748b;
+  background: #EEF4F0;
+  color: #718781;
   cursor: not-allowed;
 }
 
@@ -1509,17 +1509,17 @@ body {
 }
 
 .fiber-run-actions .save-materials {
-  background: #eff6ff;
-  color: #1d4ed8;
+  background: #E8F2EF;
+  color: #28645F;
 }
 
 .fiber-run-actions .complete-run {
-  background: #2563eb;
+  background: #347B75;
   color: white;
 }
 
 .fiber-run-actions .complete-run:hover {
-  background: #1d4ed8;
+  background: #28645F;
 }
 
 .fiber-run-actions .reopen-run {
@@ -1567,7 +1567,7 @@ body {
 
 #progress-section > h2 {
   font-size: 21px;
-  color: #1e293b;
+  color: #203534;
   margin-bottom: 18px;
 }
 
@@ -1597,7 +1597,7 @@ body {
 #progress-container .progress-card {
   padding: 22px;
   border-radius: 14px;
-  border-top: 3px solid #2563eb;
+  border-top: 3px solid #347B75;
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
@@ -1615,7 +1615,7 @@ body {
 }
 
 .progress-phase-header h3 {
-  color: #1e293b;
+  color: #203534;
   font-size: 17px;
 }
 
@@ -1637,12 +1637,12 @@ body {
 
 .progress-phase-summary span,
 .progress-phase-footer span {
-  color: #64748b;
+  color: #718781;
   font-size: 12px;
 }
 
 .progress-phase-summary strong {
-  color: #334155;
+  color: #344C49;
   font-size: 13px;
 }
 
@@ -1655,7 +1655,7 @@ body {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid #DCE7E2;
   padding-top: 15px;
 }
 
@@ -1666,7 +1666,7 @@ body {
 }
 
 .progress-phase-footer strong {
-  color: #1e293b;
+  color: #203534;
   font-size: 15px;
 }
 
@@ -1765,8 +1765,8 @@ body {
 
 .progress-dashboard-column {
   min-width: 0;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  background: #F5F8F6;
+  border: 1px solid #DCE7E2;
   border-radius: 16px;
   padding: 20px;
 }
@@ -1889,4 +1889,35 @@ body {
   #construction-phase-progress-container {
     grid-template-columns: 1fr;
   }
+}
+
+/* Selector del proyecto activo */
+.project-context {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.project-context label {
+    color: #718781;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.project-context select {
+    min-width: 180px;
+    padding: 10px 36px 10px 12px;
+    border: 1px solid #DCE7E2;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #203534;
+    font: inherit;
+}
+
+@media (max-width: 760px) {
+    .topbar,
+    .project-context {
+        align-items: flex-start;
+        flex-direction: column;
+    }
 }
