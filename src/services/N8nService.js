@@ -19,6 +19,7 @@ const OUTPUT_MATERIAL_NAMES = {
   "Remates para acero": "Remates de aceros",
 
   "Remate café (pieza)": "remate café",
+  "Remate cafe (Pieza)": "remate café",
 
   "Remate 6 hilos": "Remate de fibra 6 hilos",
 
