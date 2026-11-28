@@ -12,18 +12,28 @@ const OUTPUT_MATERIAL_NAMES = {
   "NAP": "Cajas NAP",
   "Herrajes Tipo D": "Herrajes tipo D",
   "Herrajes tipo D (pieza)": "Herrajes tipo D",
-  "remates de aceros": "Remate de aceros",
-  "Remates Acero (Pieza)": "Remate de aceros",
-  "Remates para acero": "Remate de aceros",
+
+  "remates de aceros": "Remates de aceros",
+  "Remate de aceros": "Remates de aceros",
+  "Remates Acero (Pieza)": "Remates de aceros",
+  "Remates para acero": "Remates de aceros",
+
+  "Remate café (pieza)": "remate café",
+
   "Remate 6 hilos": "Remate de fibra 6 hilos",
-  "Fibra de 24 hilos - SYSCOM (m)": "Fibra de 24 hilos",
+
+  "Fibra de 24 hilos": "Fibra 24 hilos - SYSCOM",
+  "Fibra de 24 hilos - SYSCOM (m)": "Fibra 24 hilos - SYSCOM",
   "Fibra de 6 hilos - OpticTimes": "Fibra de 6 hilos OpticTimes",
+
   "Hebillas 5/8 (Pieza)": "Hebillas 5/8",
   "Raquetas (Pieza)": "Raquetas",
+
   "Splitter": "Splitter 1x8",
   "Splitter 1X8": "Splitter 1x8",
   "Splitter 1x2": "Splitter 1x2",
   "Splitter 1X2 (Pieza)": "Splitter 1x2",
+
   "Tensores": "Tensor TotalPlay",
   "Tensor": "Tensor TotalPlay",
   "Tensores Drop": "Tensor TotalPlay",
@@ -32,7 +42,9 @@ const OUTPUT_MATERIAL_NAMES = {
   "Tensor Drop": "Tensor TotalPlay",
   "Tensor TotalPlay": "Tensor TotalPlay",
   "tensor totalplay": "Tensor TotalPlay",
-  "Cierre de empalme primer nivel": "Cierre de empalme de primer nivel"
+
+  "Cierre de empalme de primer nivel": "Cierre de empalme primer nivel",
+  "Cierre de empalme primer nivel": "Cierre de empalme primer nivel"
 };
 
 function getOutputMaterialName(name) {
