@@ -25,7 +25,7 @@ const OUTPUT_MATERIAL_NAMES = {
 
   "Fibra de 24 hilos": "Fibra 24 hilos - SYSCOM",
   "Fibra de 24 hilos - SYSCOM (m)": "Fibra 24 hilos - SYSCOM",
-  "Fibra de 6 hilos - OpticTimes": "Fibra de 6 hilos OpticTimes",
+  "Fibra de 6 hilos - OpticTimes": "Fibra 6 hilos - OpticTimes",
 
   "Hebillas 5/8 (Pieza)": "Hebillas 5/8",
   "Raquetas (Pieza)": "Raquetas",
