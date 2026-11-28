@@ -18,8 +18,8 @@ const OUTPUT_MATERIAL_NAMES = {
   "Remates Acero (Pieza)": "Remates de aceros",
   "Remates para acero": "Remates de aceros",
 
-  "Remate café (pieza)": "remate café",
-  "Remate cafe (Pieza)": "remate café",
+  "Remate café (pieza)": "Remate café",
+  "Remate cafe (Pieza)": "Remate café",
 
   "Remate 6 hilos": "Remate de fibra 6 hilos",
 
@@ -54,24 +54,26 @@ function getOutputMaterialName(name) {
   return OUTPUT_MATERIAL_NAMES[normalizedName] || normalizedName;
 }
 
+// Unidades oficiales del catálogo de inventario.
+const OUTPUT_MATERIAL_UNITS = {
+  "Acero": "Instalaciones",
+
+  "Cable UTP para exteriores": "Meter",
+  "Cable UTP para interiores": "Meter",
+  "Carretes unifibra 1000 m": "Meter",
+  "Carretes unifibra 500 m": "Meter",
+  "Fibra 24 hilos - SYSCOM": "Meter",
+  "Fibra 6 hilos - OpticTimes": "Meter",
+  "Fibra 96 hilos - SYSCOM": "Meter",
+  "Fibra 96 hilos - Telmex": "Meter"
+};
+
 function getOutputMaterialUnit(name, unit) {
-  // La nomenclatura solicitada para Acero siempre se reporta en piezas.
-  if (["Acero", "Acero m"].includes(String(name || "").trim())) {
-    return "pza";
-  }
+  const outputName = getOutputMaterialName(name);
 
-  if ([
-    "Tensor",
-    "Tensores",
-    "Tensores Drop",
-    "Tensor Drop",
-    "Tensor TotalPlay",
-    "Tensores TotalPlay"
-  ].includes(String(name || "").trim())) {
-    return "pza";
-  }
-
-  return unit;
+  // Los materiales de longitud e instalaciones tienen unidad explícita.
+  // Los demás materiales del catálogo se registran en Piezas.
+  return OUTPUT_MATERIAL_UNITS[outputName] || "Piezas";
 }
 
 function formatOutputMaterial(material, quantityField = "actual_quantity") {
@@ -159,12 +161,12 @@ function buildUnifibraReel(meters, quantityField = "actual_quantity") {
     return null;
   }
 
+  const reelSize = quantity <= 500 ? 500 : 1000;
+
   return {
-    name: quantity <= 500
-      ? "Carretes unifibra 500 m"
-      : "Carretes unifibra 1000 m",
-    [quantityField]: 1,
-    unit: "carrete"
+    name: `Carretes unifibra ${reelSize} m`,
+    [quantityField]: reelSize,
+    unit: "Meter"
   };
 }
 
