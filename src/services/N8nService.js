@@ -30,19 +30,20 @@ const OUTPUT_MATERIAL_NAMES = {
   "Hebillas 5/8 (Pieza)": "Hebillas 5/8",
   "Raquetas (Pieza)": "Raquetas",
 
-  "Splitter": "Splitter 1x8",
-  "Splitter 1X8": "Splitter 1x8",
-  "Splitter 1x2": "Splitter 1x2",
-  "Splitter 1X2 (Pieza)": "Splitter 1x2",
+  "Splitter": "Splitters 1x8",
+  "Splitter 1x8": "Splitters 1x8",
+  "Splitter 1X8": "Splitters 1x8",
+  "Splitter 1x2": "Splitters 1x2",
+  "Splitter 1X2 (Pieza)": "Splitters 1x2",
 
-  "Tensores": "Tensor TotalPlay",
-  "Tensor": "Tensor TotalPlay",
-  "Tensores Drop": "Tensor TotalPlay",
-  "Tensores drop": "Tensor TotalPlay",
-  "tensores drop": "Tensor TotalPlay",
-  "Tensor Drop": "Tensor TotalPlay",
-  "Tensor TotalPlay": "Tensor TotalPlay",
-  "tensor totalplay": "Tensor TotalPlay",
+  "Tensores": "Tensores TotalPlay",
+  "Tensor": "Tensores TotalPlay",
+  "Tensores Drop": "Tensores TotalPlay",
+  "Tensores drop": "Tensores TotalPlay",
+  "tensores drop": "Tensores TotalPlay",
+  "Tensor Drop": "Tensores TotalPlay",
+  "Tensor TotalPlay": "Tensores TotalPlay",
+  "tensor totalplay": "Tensores TotalPlay",
 
   "Cierre de empalme de primer nivel": "Cierre de empalme primer nivel",
   "Cierre de empalme primer nivel": "Cierre de empalme primer nivel"
@@ -59,7 +60,14 @@ function getOutputMaterialUnit(name, unit) {
     return "pza";
   }
 
-  if (["Tensor", "Tensores", "Tensores Drop", "Tensor Drop", "Tensor TotalPlay"].includes(String(name || "").trim())) {
+  if ([
+    "Tensor",
+    "Tensores",
+    "Tensores Drop",
+    "Tensor Drop",
+    "Tensor TotalPlay",
+    "Tensores TotalPlay"
+  ].includes(String(name || "").trim())) {
     return "pza";
   }
 
